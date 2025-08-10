@@ -3,7 +3,7 @@ import { Trees, Droplets, Trash2, Edit } from 'lucide-react';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import EditPhaseModal from './EditPhaseModal';
 import { deletePhaseWithHierarchyUpdate } from '../lib/hierarchicalData';
-import { useLanguage } from '../contexts/languageContext';
+import { useLanguage } from '../contexts/LanguageContext';
 interface FieldCardProps {
   id: string;
   phase: string;
