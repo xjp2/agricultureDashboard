@@ -267,9 +267,21 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
   };
 
   const getAverageRainfall = () => {
-    const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || (currentYear % 400 === 0);
-    const daysInYear = isLeapYear ? 366 : 365;
-    return daysInYear > 0 ? yearlyTotal / daysInYear : 0;
+    const today = new Date();
+    let dayOfYear: number;
+    
+    if (currentYear === today.getFullYear()) {
+      // For current year, calculate actual day of year
+      const start = new Date(currentYear, 0, 0);
+      const diff = today.getTime() - start.getTime();
+      dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+    } else {
+      // For past/future years, use total days in year
+      const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || (currentYear % 400 === 0);
+      dayOfYear = isLeapYear ? 366 : 365;
+    }
+    
+    return dayOfYear > 0 ? yearlyTotal / dayOfYear : 0;
   };
 
   const getRainyDaysCount = () => {
@@ -448,17 +460,6 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
           </div>
         </div>
         <div className="flex gap-3 items-center">
-          <div className="flex items-center gap-2">
-            <Settings size={16} className={darkMode ? 'text-gray-400' : 'text-gray-600'} />
-            <select 
-              value={unit} 
-              onChange={(e) => setUnit(e.target.value as 'mm' | 'inches')}
-              className={`text-sm rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-700'} py-1 px-2`}
-            >
-              <option value="mm">Millimeters (mm)</option>
-              <option value="inches">Inches (in)</option>
-            </select>
-          </div>
           <div className="flex gap-1">
             <button
               onClick={() => setSelectedView('daily')}
