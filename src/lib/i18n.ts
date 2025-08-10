@@ -644,7 +644,7 @@ export const translations: Translations = {
     totalRainfall: '总降雨量',
     rainyDays: '雨天',
     averagePerRainyDay: '每雨天平均',
-    averagePerDayOfYear: '每年日平均',
+    averageRainyDaysPerDayOfYear: '每年日雨天比率',
 
     // Worker Management
     workerManagement: '工人管理',
