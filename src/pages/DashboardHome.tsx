@@ -466,3 +466,5 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
               {t('recordRainfall')}
             </button>
           </div>
+  )
+}
