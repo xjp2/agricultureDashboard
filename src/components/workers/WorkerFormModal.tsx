@@ -178,7 +178,6 @@ const WorkerFormModal: React.FC<WorkerFormModalProps> = ({
           </div>
           <button
             onClick={onClose}
-               {worker ? t('updateWorker') : t('addWorker')}
           >
             {t('cancel')}
           </button>
