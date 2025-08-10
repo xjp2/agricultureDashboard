@@ -90,6 +90,12 @@ export const translations: Translations = {
     
     // Fertilizer Management
     selectPhaseForFertilizer: 'Select a phase for fertilizer management',
+    choosePhaseFertilizerProgram: 'Choose a phase to set up and manage comprehensive fertilizer programs',
+    noPhasesAvailable: 'No Phases Available',
+    createPhaseFirstMessage: 'Please create a phase first in the Field Visualization section to begin fertilizer management.',
+    goToFieldVisualization: 'Go to Field Visualization',
+    area: 'Area',
+    treesPerAcre: 'trees/acre',
     manageFertilizerPrograms: 'Manage fertilizer programs for Phase {phase}',
     programStartDate: 'Program Start Date',
     programStarted: 'Started:',
@@ -357,6 +363,12 @@ export const translations: Translations = {
 
     // Fertilizer Management
     selectPhaseForFertilizer: 'Pilih fasa untuk pengurusan baja',
+    choosePhaseFertilizerProgram: 'Pilih fasa untuk menyediakan dan mengurus program baja yang komprehensif',
+    noPhasesAvailable: 'Tiada Fasa Tersedia',
+    createPhaseFirstMessage: 'Sila cipta fasa terlebih dahulu di bahagian Visualisasi Ladang untuk memulakan pengurusan baja.',
+    goToFieldVisualization: 'Pergi ke Visualisasi Ladang',
+    area: 'Kawasan',
+    treesPerAcre: 'pokok/ekar',
     manageFertilizerPrograms: 'Urus program baja untuk Fasa {phase}',
     programStartDate: 'Tarikh Mula Program',
     programStarted: 'Bermula:',
@@ -624,6 +636,12 @@ export const translations: Translations = {
 
     // Fertilizer Management
     selectPhaseForFertilizer: '选择肥料管理阶段',
+    choosePhaseFertilizerProgram: '选择一个阶段来设置和管理综合肥料计划',
+    noPhasesAvailable: '没有可用阶段',
+    createPhaseFirstMessage: '请先在田地可视化部分创建阶段以开始肥料管理。',
+    goToFieldVisualization: '前往田地可视化',
+    area: '面积',
+    treesPerAcre: '棵/英亩',
     manageFertilizerPrograms: '管理阶段 {phase} 的肥料计划',
     programStartDate: '计划开始日期',
     programStarted: '开始于：',
