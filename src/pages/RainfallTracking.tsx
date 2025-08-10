@@ -274,6 +274,27 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
     return rainfallData.filter(entry => entry.rainfall > 0).length;
   };
 
+  const getAverageRainyDays = () => {
+    const rainyDaysCount = getRainyDaysCount();
+    const today = new Date();
+    const currentDate = new Date(currentYear, today.getMonth(), today.getDate());
+    
+    let dayOfYear: number;
+    
+    if (currentYear === today.getFullYear()) {
+      // For current year, calculate actual day of year
+      const start = new Date(currentYear, 0, 0);
+      const diff = currentDate.getTime() - start.getTime();
+      dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+    } else {
+      // For past/future years, use total days in year
+      const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || (currentYear % 400 === 0);
+      dayOfYear = isLeapYear ? 366 : 365;
+    }
+    
+    return dayOfYear > 0 ? rainyDaysCount / dayOfYear : 0;
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
