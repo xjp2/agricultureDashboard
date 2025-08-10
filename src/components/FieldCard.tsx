@@ -65,7 +65,7 @@ const FieldCard: React.FC<FieldCardProps> = ({
             <button
               onClick={() => setShowEditModal(true)}
               className="p-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors"
-              title="Edit Phase"
+              title={t('edit')}
             >
               <Edit size={16} />
             </button>
