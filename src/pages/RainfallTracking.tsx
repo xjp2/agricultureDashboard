@@ -177,6 +177,29 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
 
     const monthNames = [
       'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const monthlyTotalsArray: MonthlyTotal[] = [];
+    for (let i = 0; i < 12; i++) {
+      const monthKey = `${currentYear}-${i}`;
+      monthlyTotalsArray.push({
+        month: monthNames[i],
+        monthIndex: i,
+        total: monthlyData[monthKey] || 0
+      });
+    }
+
+    setMonthlyTotals(monthlyTotalsArray);
+
+    // Calculate yearly total
+    const yearlySum = rainfallData
+      .filter(entry => new Date(entry.date).getFullYear() === currentYear)
+      .reduce((sum, entry) => sum + entry.rainfall, 0);
+    
+    setYearlyTotal(yearlySum);
+  };
+
   const convertUnit = (value: number, fromUnit: 'mm' | 'inches', toUnit: 'mm' | 'inches'): number => {
     if (fromUnit === toUnit) return value;
     if (fromUnit === 'mm' && toUnit === 'inches') return value / 25.4;
@@ -426,6 +449,17 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
           </div>
         </div>
         <div className="flex gap-3 items-center">
+          <div className="flex items-center gap-2">
+            <Settings size={16} className={darkMode ? 'text-gray-400' : 'text-gray-600'} />
+            <select 
+              value={unit} 
+              onChange={(e) => setUnit(e.target.value as 'mm' | 'inches')}
+              className={`text-sm rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-700'} py-1 px-2`}
+            >
+              <option value="mm">Millimeters (mm)</option>
+              <option value="inches">Inches (in)</option>
+            </select>
+          </div>
           <div className="flex gap-1">
             <button
               onClick={() => setSelectedView('daily')}
@@ -479,8 +513,8 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
           darkMode={darkMode}
         />
         <StatCard
-          title={t('averageRainfallPerDay')}
-          value={formatRainfall(getAverageRainfall())}
+          title={t('averagePerDayOfYear')}
+          value={getAverageRainyDays().toFixed(3)}
           icon={<TrendingUp size={20} />}
           trend={0}
           color="purple"
