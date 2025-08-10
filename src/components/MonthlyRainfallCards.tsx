@@ -1,5 +1,6 @@
 import React from 'react';
 import { CloudRain } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface MonthlyTotal {
   month: number;
@@ -10,7 +11,7 @@ interface MonthlyTotal {
 
 interface MonthlyRainfallCardsProps {
   monthlyTotals: MonthlyTotal[];
-  onMonthClick: (month: number) => void;
+  onMonthClick: (monthIndex: number) => void;
   darkMode: boolean;
 }
 
@@ -19,8 +20,16 @@ const MonthlyRainfallCards: React.FC<MonthlyRainfallCardsProps> = ({
   onMonthClick,
   darkMode
 }) => {
+  const { language } = useLanguage();
+
   const formatRainfall = (value: number): string => {
     return `${value.toFixed(1)} mm`;
+  };
+
+  const getLocalizedMonthName = (monthIndex: number, year: number) => {
+    const date = new Date(year, monthIndex, 1);
+    const locale = language === 'ms' ? 'ms-MY' : language === 'zh' ? 'zh-CN' : 'en-US';
+    return date.toLocaleDateString(locale, { month: 'long' });
   };
 
   const getCardColor = (total: number) => {
@@ -54,7 +63,7 @@ const MonthlyRainfallCards: React.FC<MonthlyRainfallCardsProps> = ({
         >
           <div className="flex items-center justify-between mb-3">
             <h3 className={`font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              {monthData.monthName}
+              {getLocalizedMonthName(monthData.month, monthData.year)}
             </h3>
             <CloudRain size={20} className={getIconColor(monthData.total)} />
           </div>

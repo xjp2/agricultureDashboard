@@ -175,17 +175,14 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
       monthlyData[monthKey] = (monthlyData[monthKey] || 0) + entry.rainfall;
     });
 
-    const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-
-    const monthlyTotalsData: MonthlyTotal[] = monthNames.map((name, index) => {
+    const monthlyTotalsData: MonthlyTotal[] = Array.from({ length: 12 }, (_, index) => {
       const monthKey = `${currentYear}-${index}`;
+      const monthName = new Date(currentYear, index, 1).toLocaleDateString('en-US', { month: 'long' });
       return {
-        month: name,
+        month: index,
+        year: currentYear,
         total: monthlyData[monthKey] || 0,
-        monthIndex: index
+        monthName: monthName
       };
     });
 
