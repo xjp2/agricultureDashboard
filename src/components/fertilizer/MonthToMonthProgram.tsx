@@ -3,6 +3,7 @@ import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase, PhaseData, BlockData } from '../../lib/supabase';
 import { PhaseStartDateData, MonthFertilizerData } from '../../lib/fertilizerTypes';
 import MonthlyEntryModal from './MonthlyEntryModal';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface MonthToMonthProgramProps {
   phase: PhaseData;
@@ -15,6 +16,7 @@ const MonthToMonthProgram: React.FC<MonthToMonthProgramProps> = ({
   phaseStartDate,
   darkMode
 }) => {
+  const { t } = useLanguage();
   const [blocks, setBlocks] = useState<BlockData[]>([]);
   const [fertilizerData, setFertilizerData] = useState<MonthFertilizerData[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -180,7 +182,7 @@ const MonthToMonthProgram: React.FC<MonthToMonthProgramProps> = ({
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>Loading calendar data...</p>
+          <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('loadingCalendarData')}</p>
         </div>
       </div>
     );
@@ -193,10 +195,10 @@ const MonthToMonthProgram: React.FC<MonthToMonthProgramProps> = ({
           <Calendar size={24} className="text-blue-500" />
           <div>
             <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Month-to-Month Program
+              {t('monthToMonthProgram')}
             </h3>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Click on any date within the program period to add daily fertilizer applications
+              {t('clickDateToAddApplication')}
             </p>
           </div>
         </div>
@@ -205,7 +207,7 @@ const MonthToMonthProgram: React.FC<MonthToMonthProgramProps> = ({
       {/* Program Period Info */}
       <div className={`p-3 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
         <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-          <strong>Program Started:</strong> {startDate.toLocaleDateString()}
+          <strong>{t('programStarted')}</strong> {startDate.toLocaleDateString()}
         </p>
       </div>
 
@@ -263,11 +265,11 @@ const MonthToMonthProgram: React.FC<MonthToMonthProgramProps> = ({
           <div className="flex items-center justify-center gap-6 text-xs">
             <div className="flex items-center gap-2">
               <div className={`w-3 h-3 rounded ${darkMode ? 'bg-blue-900/20 border border-blue-500' : 'bg-blue-50 border border-blue-300'}`}></div>
-              <span className={darkMode ? 'text-gray-300' : 'text-gray-600'}>Today</span>
+              <span className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('today')}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className={`w-3 h-3 rounded ${darkMode ? 'bg-green-900/20' : 'bg-green-50'}`}></div>
-              <span className={darkMode ? 'text-gray-300' : 'text-gray-600'}>Has applications</span>
+              <span className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('hasApplications')}</span>
             </div>
           </div>
         </div>

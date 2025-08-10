@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Calendar, Sprout } from 'lucide-react';
 import { supabase, PhaseData } from '../../lib/supabase';
 import { PhaseStartDateData } from '../../lib/fertilizerTypes';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface StartDateModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ const StartDateModal: React.FC<StartDateModalProps> = ({
   isEditing = false,
   darkMode
 }) => {
+  const { t } = useLanguage();
   const [startDate, setStartDate] = useState(phaseStartDate?.start_date || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +32,7 @@ const StartDateModal: React.FC<StartDateModalProps> = ({
     e.preventDefault();
     
     if (!startDate) {
-      setError('Please select a start date');
+      setError(t('pleaseSelectStartDate'));
       return;
     }
 
@@ -87,10 +89,10 @@ const StartDateModal: React.FC<StartDateModalProps> = ({
             </div>
             <div>
               <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                {isEditing ? 'Edit Program Period' : 'Setup Fertilizer Program'}
+                {isEditing ? t('editProgramPeriod') : t('setupFertilizerProgram')}
               </h2>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Phase {phase.Phase}
+                {t('phaseDetails')} {phase.Phase}
               </p>
             </div>
           </div>
@@ -104,21 +106,21 @@ const StartDateModal: React.FC<StartDateModalProps> = ({
 
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'} mb-6`}>
           <h3 className={`font-medium mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-            {isEditing ? 'Update Program' : 'Program Setup'}
+            {isEditing ? t('updateProgram') : t('programSetup')}
           </h3>
           <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'} mb-3`}>
             {isEditing 
-              ? 'Update the start date for your fertilizer management program. The end date will be automatically recalculated.'
-              : 'Set the start date for your fertilizer management program. This will create a 12-month program period.'
+              ? t('updateProgramDescription')
+              : t('setProgramDescription')
             }
           </p>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <p className={`font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Phase Area:</p>
-              <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>{phase.Area || 0} acres</p>
+              <p className={`font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{t('phaseArea')}:</p>
+              <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>{phase.Area || 0} {t('acres')}</p>
             </div>
             <div>
-              <p className={`font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Total Blocks:</p>
+              <p className={`font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{t('totalBlocks')}:</p>
               <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>{phase.Block || 0}</p>
             </div>
           </div>
@@ -133,7 +135,7 @@ const StartDateModal: React.FC<StartDateModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Program Start Date *
+              {t('programStartDate')} *
             </label>
             <div className="relative">
               <input
@@ -154,10 +156,10 @@ const StartDateModal: React.FC<StartDateModalProps> = ({
           {startDate && (
             <div className={`p-3 rounded-md ${darkMode ? 'bg-green-900/10 border border-green-900/20' : 'bg-green-50 border border-green-200'}`}>
               <p className={`text-sm font-medium ${darkMode ? 'text-green-400' : 'text-green-800'}`}>
-                Program Start Date
+                {t('programStartDate')}
               </p>
               <p className={`text-sm ${darkMode ? 'text-green-300' : 'text-green-700'}`}>
-                Start: {new Date(startDate).toLocaleDateString()}
+                {t('programStarted')} {new Date(startDate).toLocaleDateString()}
               </p>
             </div>
           )}
@@ -173,7 +175,7 @@ const StartDateModal: React.FC<StartDateModalProps> = ({
                   : 'border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50'
               }`}
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               type="submit"
@@ -185,7 +187,7 @@ const StartDateModal: React.FC<StartDateModalProps> = ({
               ) : (
                 <>
                   <Sprout size={16} className="mr-1" />
-                  {isEditing ? 'Update Program' : 'Start Program'}
+                  {isEditing ? t('updateProgram') : t('startProgram')}
                 </>
               )}
             </button>

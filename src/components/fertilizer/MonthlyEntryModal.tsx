@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Calendar, Trash2 } from 'lucide-react';
 import { supabase, BlockData } from '../../lib/supabase';
 import { MonthFertilizerData } from '../../lib/fertilizerTypes';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface MonthlyEntryModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
   blocks,
   darkMode
 }) => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     workerName: '',
     block_id: '',
@@ -103,10 +105,10 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
     try {
       // Validate form
       if (!formData.workerName.trim()) {
-        throw new Error('Worker name is required');
+        throw new Error(t('workerNameRequired'));
       }
       if (!formData.block_id) {
-        throw new Error('Please select a block');
+        throw new Error(t('pleaseSelectBlock'));
       }
 
       const { error: insertError } = await supabase
@@ -125,7 +127,7 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
       onEntryAdded();
     } catch (err) {
       console.error('Error adding entry:', err);
-      setError(err instanceof Error ? err.message : 'Failed to add entry');
+      setError(err instanceof Error ? err.message : t('failedToAddEntry'));
     } finally {
       setLoading(false);
     }
@@ -152,7 +154,7 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
             </div>
             <div>
               <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                Daily Fertilizer Application
+                {t('dailyFertilizerApplication')}
               </h2>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 {formatDate()}
@@ -171,7 +173,7 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
         {existingEntries.length > 0 && (
           <div className="mb-6">
             <h3 className={`text-sm font-medium mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Existing Applications
+              {t('existingApplications')}
             </h3>
             <div className="space-y-2">
               {existingEntries.map((entry) => (
@@ -186,7 +188,7 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
                       {entry.name}
                     </p>
                     <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Block {entry.block_name} • {entry.bag}kg × {entry.quantity} = {entry.bag * entry.quantity}kg
+                      {t('block')} {entry.block_name} • {entry.bag}{t('kg')} × {entry.quantity} = {entry.bag * entry.quantity}{t('kg')}
                     </p>
                   </div>
                   <button
@@ -210,7 +212,7 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Worker Name *
+              {t('workerName')} *
             </label>
             <input
               type="text"
@@ -223,13 +225,13 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
                   ? 'bg-gray-700 border-gray-600 text-white' 
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Enter worker name"
+              placeholder={t('enterWorkerName')}
             />
           </div>
 
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Block *
+              {t('block')} *
             </label>
             <select
               name="block_id"
@@ -242,10 +244,10 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500`}
             >
-              <option value="">Select a block</option>
+              <option value="">{t('selectBlock')}</option>
               {blocks.map((block) => (
                 <option key={block.id} value={block.id}>
-                  Block {block.Block}
+                  {t('block')} {block.Block}
                 </option>
               ))}
             </select>
@@ -253,7 +255,7 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
 
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Bag Size *
+              {t('bagSize')} *
             </label>
             <select
               name="bag"
@@ -273,7 +275,7 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
 
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Quantity *
+              {t('quantity')} *
             </label>
             <input
               type="number"
@@ -287,14 +289,14 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
                   ? 'bg-gray-700 border-gray-600 text-white' 
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Enter quantity"
+              placeholder={t('enterQuantity')}
             />
           </div>
 
           {formData.bag && formData.quantity && (
             <div className={`p-3 rounded-md ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
               <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                <strong>Total Weight:</strong> {formData.bag} kg × {formData.quantity} = {formData.bag * formData.quantity} kg
+                <strong>{t('totalWeight')}:</strong> {formData.bag} {t('kg')} × {formData.quantity} = {formData.bag * formData.quantity} {t('kg')}
               </p>
             </div>
           )}
@@ -310,7 +312,7 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
                   : 'border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50'
               }`}
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               type="submit"
@@ -322,7 +324,7 @@ const MonthlyEntryModal: React.FC<MonthlyEntryModalProps> = ({
               ) : (
                 <>
                   <Calendar size={16} className="mr-1" />
-                  Add Application
+                  {t('addApplication')}
                 </>
               )}
             </button>

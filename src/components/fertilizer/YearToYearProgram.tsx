@@ -4,6 +4,7 @@ import { supabase, PhaseData, BlockData } from '../../lib/supabase';
 import { PhaseStartDateData, YearFertilizerData } from '../../lib/fertilizerTypes';
 import FertilizerEntryModal from './FertilizerEntryModal';
 import BlockHistoryModal from './BlockHistoryModal';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface YearToYearProgramProps {
   phase: PhaseData;
@@ -16,6 +17,7 @@ const YearToYearProgram: React.FC<YearToYearProgramProps> = ({
   phaseStartDate,
   darkMode
 }) => {
+  const { t } = useLanguage();
   const [blocks, setBlocks] = useState<BlockData[]>([]);
   const [fertilizerData, setFertilizerData] = useState<YearFertilizerData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -252,10 +254,10 @@ const YearToYearProgram: React.FC<YearToYearProgramProps> = ({
           <BarChart3 size={24} className="text-green-500" />
           <div>
             <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Year-to-Year Fertilizer Program
+              {t('yearToYearFertilizerProgram')}
             </h3>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Click on any month-block intersection to add fertilizer entries
+              {t('clickMonthBlockToAdd')}
             </p>
           </div>
         </div>
@@ -264,7 +266,7 @@ const YearToYearProgram: React.FC<YearToYearProgramProps> = ({
       {blocks.length === 0 ? (
         <div className="text-center py-8">
           <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-            No blocks found for this phase. Please add blocks in the Field Visualization section.
+            <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('loadingProgramData')}</p>
           </p>
         </div>
       ) : (
@@ -274,7 +276,7 @@ const YearToYearProgram: React.FC<YearToYearProgramProps> = ({
               <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-50'}>
                 <tr>
                   <th className={`px-4 py-3 text-left text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} sticky left-0 ${darkMode ? 'bg-gray-700' : 'bg-gray-50'} z-10`}>
-                    Block
+                    {t('block')}
                   </th>
                   {allColumns.map((column, index) => (
                     column.type === 'month' ? (
@@ -282,7 +284,7 @@ const YearToYearProgram: React.FC<YearToYearProgramProps> = ({
                         key={`month-${column.fullDate}`}
                         className={`px-4 py-3 text-center text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} min-w-[120px]`}
                       >
-                        <div>{column.monthName}</div>
+                        <div>{t('month' + (column.date.getMonth() + 1))}</div>
                         <div className="text-xs opacity-75">
                           {column.date.getFullYear()}
                         </div>
@@ -300,7 +302,7 @@ const YearToYearProgram: React.FC<YearToYearProgramProps> = ({
                     )
                   ))}
                   <th className={`px-4 py-3 text-center text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} sticky right-0 ${darkMode ? 'bg-gray-700' : 'bg-gray-50'} z-10 min-w-[120px]`}>
-                    {getYearFromStartDate()}
+                    {t('totalKg')}
                   </th>
                 </tr>
               </thead>
@@ -376,7 +378,7 @@ const YearToYearProgram: React.FC<YearToYearProgramProps> = ({
                                   </>
                                 ) : (
                                   <div className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                                    No data
+                                    {t('noData')}
                                   </div>
                                 )}
                               </div>
@@ -405,7 +407,7 @@ const YearToYearProgram: React.FC<YearToYearProgramProps> = ({
                             </>
                           ) : (
                             <div className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                              No data
+                              {t('noData')}
                             </div>
                           );
                         })()}
