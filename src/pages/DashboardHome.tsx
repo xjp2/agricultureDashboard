@@ -4,22 +4,24 @@ import StatCard from '../components/StatCard';
 import WeatherCard from '../components/WeatherCard';
 import DroneCard from '../components/DroneCard';
 import FieldCard from '../components/FieldCard';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface DashboardHomeProps {
   darkMode: boolean;
 }
 
 const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
+  const { t } = useLanguage();
   
   return (
     <div className="space-y-6">
       <div>
         <h2 className={`text-xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-          Farm Overview
+          {t('farmOverview')}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard 
-            title="Active Drones" 
+            title={t('activeDrones')} 
             value="8/12" 
             icon={<Drone size={20} />} 
             trend={5} 
@@ -27,7 +29,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
             darkMode={darkMode}
           />
           <StatCard 
-            title="Field Health" 
+            title={t('fieldHealth')} 
             value="87%" 
             icon={<Map size={20} />} 
             trend={-2} 
@@ -35,7 +37,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
             darkMode={darkMode}
           />
           <StatCard 
-            title="Workers on Duty" 
+            title={t('workersOnDuty')} 
             value="18" 
             icon={<Users size={20} />} 
             trend={0} 
@@ -43,7 +45,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
             darkMode={darkMode}
           />
           <StatCard 
-            title="Inventory Status" 
+            title={t('inventoryStatus')} 
             value="12" 
             icon={<Package size={20} />} 
             trend={-4} 
@@ -57,10 +59,10 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <h2 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-              Weather Conditions
+              {t('weatherConditions')}
             </h2>
             <button className={`text-sm px-3 py-1 rounded-md ${darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}`}>
-              View Forecast
+              {t('viewForecast')}
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -90,7 +92,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-              Alerts
+              {t('alerts')}
             </h2>
             <span className={`text-xs px-2 py-1 rounded-full ${darkMode ? 'bg-red-900/20 text-red-400' : 'bg-red-100 text-red-800'}`}>
               4 New
@@ -154,10 +156,10 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-            Recent Activity
+            {t('recentActivity')}
           </h2>
           <button className={`text-sm px-3 py-1 rounded-md ${darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}`}>
-            View All
+            {t('viewAll')}
           </button>
         </div>
         <div className={`rounded-xl border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} overflow-hidden shadow-sm`}>
@@ -165,19 +167,19 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
             <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-50'}>
               <tr>
                 <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                  Activity
+                  {t('activity')}
                 </th>
                 <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                  Performed By
+                  {t('performedBy')}
                 </th>
                 <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                  Location
+                  {t('location')}
                 </th>
                 <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                  Time
+                  {t('time')}
                 </th>
                 <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                  Status
+                  {t('status')}
                 </th>
               </tr>
             </thead>
@@ -197,7 +199,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-100 text-green-800'}`}>
-                    Completed
+                    {t('completed')}
                   </span>
                 </td>
               </tr>
@@ -216,7 +218,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-100 text-blue-800'}`}>
-                    Analyzing
+                    {t('analyzing')}
                   </span>
                 </td>
               </tr>
@@ -235,7 +237,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-100 text-green-800'}`}>
-                    Completed
+                    {t('completed')}
                   </span>
                 </td>
               </tr>
@@ -254,7 +256,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-yellow-900/20 text-yellow-400' : 'bg-yellow-100 text-yellow-800'}`}>
-                    In Progress
+                    {t('inProgress')}
                   </span>
                 </td>
               </tr>
