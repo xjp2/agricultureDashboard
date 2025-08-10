@@ -1,5 +1,6 @@
 import React from 'react';
 import { Battery, AlertCircle, Check } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface DroneCardProps {
   id: string;
@@ -18,6 +19,8 @@ const DroneCard: React.FC<DroneCardProps> = ({
   lastMission,
   darkMode
 }) => {
+  const { t } = useLanguage();
+  
   const getStatusColor = () => {
     switch (status) {
       case 'active':
@@ -66,26 +69,26 @@ const DroneCard: React.FC<DroneCardProps> = ({
           </p>
         </div>
         <div>
-          <p>ID: {id}</p>
+          <p>{t('employeeId')}: {id}</p>
         </div>
         <div className="col-span-2">
-          <p className="text-xs">Last mission: {lastMission}</p>
+          <p className="text-xs">{t('lastMission')}: {lastMission}</p>
         </div>
       </div>
       
       <div className="flex justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
         <button className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}`}>
-          Details
+          {t('details')}
         </button>
         {status === 'maintenance' ? (
           <button className="flex items-center text-xs px-2 py-1 rounded bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400">
             <AlertCircle size={12} className="mr-1" />
-            Fix Issues
+            {t('fixIssues')}
           </button>
         ) : (
           <button className={`flex items-center text-xs px-2 py-1 rounded ${darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-100 text-green-800'}`}>
             <Check size={12} className="mr-1" />
-            Deploy
+            {t('deploy')}
           </button>
         )}
       </div>

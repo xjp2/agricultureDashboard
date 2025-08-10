@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, UserPlus, Edit } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { WorkerData, WorkerFormData } from '../../lib/workersTypes';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface WorkerFormModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ const WorkerFormModal: React.FC<WorkerFormModalProps> = ({
   worker,
   darkMode = false
 }) => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState<WorkerFormData>({
     Name: '',
     EID: '',
@@ -167,18 +169,18 @@ const WorkerFormModal: React.FC<WorkerFormModalProps> = ({
             </div>
             <div>
               <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                {worker ? 'Edit Worker' : 'Add New Worker'}
+                {worker ? t('editWorker') : t('addWorker')}
               </h2>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                {worker ? 'Update worker information' : 'Enter worker details'}
+                {worker ? t('updateWorkerInfo') : t('enterWorkerDetails')}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+               {worker ? t('updateWorker') : t('addWorker')}
           >
-            <X size={20} className={darkMode ? 'text-gray-400' : 'text-gray-600'} />
+            {t('cancel')}
           </button>
         </div>
 
@@ -191,7 +193,7 @@ const WorkerFormModal: React.FC<WorkerFormModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Name *
+              {t('name')} *
             </label>
             <input
               type="text"
@@ -205,14 +207,14 @@ const WorkerFormModal: React.FC<WorkerFormModalProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500' 
                     : 'bg-white border-gray-300 text-gray-900 focus:ring-blue-500'
               } focus:outline-none focus:ring-2`}
-              placeholder="Enter full name"
+              placeholder={t('enterFullName')}
             />
             {errors.Name && <p className="mt-1 text-sm text-red-500">{errors.Name}</p>}
           </div>
 
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Employee ID (EID) *
+              {t('employeeId')} (EID) *
             </label>
             <input
               type="text"
@@ -226,14 +228,14 @@ const WorkerFormModal: React.FC<WorkerFormModalProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500' 
                     : 'bg-white border-gray-300 text-gray-900 focus:ring-blue-500'
               } focus:outline-none focus:ring-2`}
-              placeholder="e.g., JNE001"
+              placeholder={t('enterEmployeeId')}
             />
             {errors.EID && <p className="mt-1 text-sm text-red-500">{errors.EID}</p>}
           </div>
 
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Department *
+              {t('department')} *
             </label>
             <input
               type="text"
@@ -247,14 +249,14 @@ const WorkerFormModal: React.FC<WorkerFormModalProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500' 
                     : 'bg-white border-gray-300 text-gray-900 focus:ring-blue-500'
               } focus:outline-none focus:ring-2`}
-              placeholder="e.g., Heavy Machinery"
+              placeholder={t('enterDepartment')}
             />
             {errors.Department && <p className="mt-1 text-sm text-red-500">{errors.Department}</p>}
           </div>
 
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Company *
+              {t('company')} *
             </label>
             <input
               type="text"
@@ -268,14 +270,14 @@ const WorkerFormModal: React.FC<WorkerFormModalProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500' 
                     : 'bg-white border-gray-300 text-gray-900 focus:ring-blue-500'
               } focus:outline-none focus:ring-2`}
-              placeholder="e.g., Sejugam"
+              placeholder={t('enterCompany')}
             />
             {errors.Company && <p className="mt-1 text-sm text-red-500">{errors.Company}</p>}
           </div>
 
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Introducer
+              {t('introducer')}
             </label>
             <input
               type="text"
@@ -287,13 +289,13 @@ const WorkerFormModal: React.FC<WorkerFormModalProps> = ({
                   ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500' 
                   : 'bg-white border-gray-300 text-gray-900 focus:ring-blue-500'
               } focus:outline-none focus:ring-2`}
-              placeholder="Person who referred this employee (optional)"
+              placeholder={t('personWhoReferred')}
             />
           </div>
 
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Date Joined *
+              {t('dateJoined')} *
             </label>
             <input
               type="date"

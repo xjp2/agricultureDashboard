@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowUpDown, ArrowUp, ArrowDown, Edit, Trash2 } from 'lucide-react';
 import { WorkerData, SortConfig } from '../../lib/workersTypes';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface WorkerTableProps {
   workers: WorkerData[];
@@ -23,6 +24,8 @@ const WorkerTable: React.FC<WorkerTableProps> = ({
   onDelete,
   darkMode
 }) => {
+  const { t } = useLanguage();
+  
   const getSortIcon = (key: keyof WorkerData) => {
     if (sortConfig.key !== key) {
       return <ArrowUpDown size={16} className="text-gray-400" />;
@@ -73,12 +76,12 @@ const WorkerTable: React.FC<WorkerTableProps> = ({
                 />
               </th>
               {[
-                { key: 'Name' as keyof WorkerData, label: 'Name' },
-                { key: 'EID' as keyof WorkerData, label: 'Employee ID' },
-                { key: 'Department' as keyof WorkerData, label: 'Department' },
-                { key: 'Company' as keyof WorkerData, label: 'Company' },
-                { key: 'Introducer' as keyof WorkerData, label: 'Introducer' },
-                { key: 'Date_Joined' as keyof WorkerData, label: 'Date Joined' }
+                { key: 'Name' as keyof WorkerData, label: t('name') },
+                { key: 'EID' as keyof WorkerData, label: t('employeeId') },
+                { key: 'Department' as keyof WorkerData, label: t('department') },
+                { key: 'Company' as keyof WorkerData, label: t('company') },
+                { key: 'Introducer' as keyof WorkerData, label: t('introducer') },
+                { key: 'Date_Joined' as keyof WorkerData, label: t('dateJoined') }
               ].map(({ key, label }) => (
                 <th
                   key={key}
@@ -92,7 +95,7 @@ const WorkerTable: React.FC<WorkerTableProps> = ({
                 </th>
               ))}
               <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                Actions
+                {t('actions')}
               </th>
             </tr>
           </thead>
@@ -107,7 +110,7 @@ const WorkerTable: React.FC<WorkerTableProps> = ({
                       </svg>
                     </div>
                     <p className="text-lg font-medium mb-2">No workers found</p>
-                    <p className="text-sm">Add your first worker to get started</p>
+                    <p className="text-sm">{t('addFirstWorker')}</p>
                   </div>
                 </td>
               </tr>

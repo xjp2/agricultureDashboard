@@ -7,12 +7,14 @@ import DeleteConfirmModal from '../components/DeleteConfirmModal';
 import WorkerFilters from '../components/workers/WorkerFilters';
 import WorkerTable from '../components/workers/WorkerTable';
 import StatCard from '../components/StatCard';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface WorkerManagementProps {
   darkMode: boolean;
 }
 
 const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
+  const { t } = useLanguage();
   const [workers, setWorkers] = useState<WorkerData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -276,10 +278,10 @@ const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h2 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-            Worker Management
+            {t('workerManagement')}
           </h2>
           <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-            Manage your workforce and employee information
+            {t('manageWorkforce')}
           </p>
         </div>
         <div className="flex gap-3">
@@ -290,7 +292,7 @@ const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
             }`}
           >
             <Filter size={16} className="mr-2" />
-            Filters
+            {t('filters')}
           </button>
           <button
             onClick={handleExport}
@@ -299,7 +301,7 @@ const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
             }`}
           >
             <Download size={16} className="mr-2" />
-            Export
+            {t('export')}
           </button>
           <button
             onClick={handleCreateWorker}
@@ -308,7 +310,7 @@ const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
             }`}
           >
             <UserPlus size={16} className="mr-2" />
-            Add Worker
+            {t('addWorker')}
           </button>
         </div>
       </div>
@@ -323,7 +325,7 @@ const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatCard
-          title="Total Workers"
+          title={t('totalWorkers')}
           value={workers.length.toString()}
           icon={<Users size={20} />}
           trend={0}
@@ -331,7 +333,7 @@ const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
           darkMode={darkMode}
         />
         <StatCard
-          title="Departments"
+          title={t('departments')}
           value={departments.length.toString()}
           icon={<Users size={20} />}
           trend={0}
@@ -339,7 +341,7 @@ const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
           darkMode={darkMode}
         />
         <StatCard
-          title="Companies"
+          title={t('companies')}
           value={companies.length.toString()}
           icon={<Users size={20} />}
           trend={0}
@@ -347,7 +349,7 @@ const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
           darkMode={darkMode}
         />
         <StatCard
-          title="This Month"
+          title={t('thisMonth')}
           value={workers.filter(w => {
             const joinDate = new Date(w.Date_Joined);
             const now = new Date();

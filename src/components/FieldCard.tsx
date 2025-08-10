@@ -109,7 +109,7 @@ const FieldCard: React.FC<FieldCardProps> = ({
               onClick={onViewDetails}
               className={`text-xs px-3 py-1.5 rounded-md ${darkMode ? 'bg-green-900/20 text-green-400 hover:bg-green-900/30' : 'bg-green-100 text-green-800 hover:bg-green-200'}`}
             >
-              View Details
+              {t('viewDetails')}
             </button>
           </div>
         </div>

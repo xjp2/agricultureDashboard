@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface RainfallData {
   id: number;
@@ -27,6 +28,7 @@ const RainfallCalendar: React.FC<RainfallCalendarProps> = ({
   onDataUpdate,
   darkMode
 }) => {
+  const { t } = useLanguage();
   const [editingCell, setEditingCell] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
   const [saving, setSaving] = useState(false);
@@ -203,7 +205,7 @@ const RainfallCalendar: React.FC<RainfallCalendarProps> = ({
           ) : (
             <div className="absolute bottom-1 left-1 right-1">
               <div className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                Click to add
+                {t('clickToAdd')}
               </div>
             </div>
           )}
@@ -250,15 +252,15 @@ const RainfallCalendar: React.FC<RainfallCalendarProps> = ({
         <div className="flex items-center justify-center gap-6 text-xs">
           <div className="flex items-center gap-2">
             <div className={`w-3 h-3 rounded ${darkMode ? 'bg-blue-900/20 border border-blue-500' : 'bg-blue-50 border border-blue-300'}`}></div>
-            <span className={darkMode ? 'text-gray-300' : 'text-gray-600'}>Today</span>
+            <span className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('today')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className={`w-3 h-3 rounded ${darkMode ? 'bg-green-900/20' : 'bg-green-50'}`}></div>
-            <span className={darkMode ? 'text-gray-300' : 'text-gray-600'}>Has rainfall data</span>
+            <span className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('hasRainfallData')}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className={`w-3 h-3 rounded ${darkMode ? 'bg-gray-800' : 'bg-white'} border ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}></div>
-            <span className={darkMode ? 'text-gray-300' : 'text-gray-600'}>No data</span>
+            <span className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('noData')}</span>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Cloud, CloudRain, Sun, Wind, CloudLightning, CloudSnow, CloudFog } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface WeatherCardProps {
   location: string;
@@ -22,6 +23,8 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
   precipitation,
   darkMode
 }) => {
+  const { t } = useLanguage();
+  
   const getWeatherIcon = () => {
     switch (condition) {
       case 'sunny':
@@ -87,15 +90,15 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
         
         <div className={`grid grid-cols-3 gap-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
           <div className="text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400">Humidity</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{t('humidity')}</p>
             <p className="text-sm">{humidity}%</p>
           </div>
           <div className="text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400">Wind</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{t('wind')}</p>
             <p className="text-sm">{windSpeed} km/h</p>
           </div>
           <div className="text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400">Rain</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{t('rain')}</p>
             <p className="text-sm">{precipitation} mm</p>
           </div>
         </div>
@@ -104,13 +107,13 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
       <div className={`px-4 py-3 ${darkMode ? 'bg-gray-700/50' : 'bg-gray-50'} border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
         <div className="flex justify-between items-center">
           <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-            {condition === 'sunny' || condition === 'cloudy' ? 'Good conditions for field work' :
-             condition === 'rainy' || condition === 'stormy' ? 'Not suitable for spraying or harvesting' :
-             condition === 'windy' ? 'Caution advised for drone operations' :
-             'Check field conditions before operations'}
+            {condition === 'sunny' || condition === 'cloudy' ? t('goodConditions') :
+             condition === 'rainy' || condition === 'stormy' ? t('notSuitableForSpraying') :
+             condition === 'windy' ? t('cautionForDrones') :
+             t('checkFieldConditions')}
           </p>
           <button className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-gray-600 hover:bg-gray-500 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}>
-            Forecast
+            {t('forecast')}
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Edit } from 'lucide-react';
 import { updatePhaseWithHierarchyUpdate } from '../lib/hierarchicalData';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface EditPhaseModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ const EditPhaseModal: React.FC<EditPhaseModalProps> = ({
   currentPhaseName,
   darkMode = false
 }) => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     phase: currentPhaseName
   });
@@ -74,7 +76,7 @@ const EditPhaseModal: React.FC<EditPhaseModalProps> = ({
       <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg p-6 w-full max-w-md mx-4`}>
         <div className="flex items-center justify-between mb-4">
           <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-            Edit Phase
+            {t('editPhase')}
           </h2>
           <button
             onClick={onClose}
@@ -93,7 +95,7 @@ const EditPhaseModal: React.FC<EditPhaseModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Phase Name *
+              {t('phaseName')} *
             </label>
             <input
               type="text"
@@ -106,14 +108,13 @@ const EditPhaseModal: React.FC<EditPhaseModalProps> = ({
                   ? 'bg-gray-700 border-gray-600 text-white' 
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-green-500`}
-              placeholder="Enter phase name"
+              placeholder={t('enterPhaseName')}
             />
           </div>
 
           <div className={`p-3 rounded-md ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
             <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              <strong>Note:</strong> Changing the phase name will update all references 
-              to this phase in blocks and maintain the hierarchical structure.
+              <strong>{t('note')}:</strong> {t('phaseNameUpdateNote')}
             </p>
           </div>
 
@@ -127,7 +128,7 @@ const EditPhaseModal: React.FC<EditPhaseModalProps> = ({
                   : 'border-gray-300 text-gray-700 hover:bg-gray-50'
               }`}
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               type="submit"
@@ -139,7 +140,7 @@ const EditPhaseModal: React.FC<EditPhaseModalProps> = ({
               ) : (
                 <>
                   <Edit size={16} className="mr-1" />
-                  Update Phase
+                  {t('updatePhase')}
                 </>
               )}
             </button>

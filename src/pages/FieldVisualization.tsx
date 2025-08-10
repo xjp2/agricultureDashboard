@@ -329,7 +329,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
         <div className="flex gap-3">
           <button className={`flex items-center px-3 py-2 rounded-md text-sm ${darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}`}>
             <Map size={16} className="mr-2" />
-            View Map
+            {t('viewMap')}
           </button>
           <button 
             onClick={handleCreateClick}
@@ -422,10 +422,10 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
                   {t('createBlock')}
                 </button>
                 <select className={`text-sm rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-700'} py-1 px-2`}>
-                  <option>Sort by {t('block')}</option>
-                  <option>Sort by Area</option>
-                  <option>Sort by {t('trees')}</option>
-                  <option>Sort by {t('date')} Planted</option>
+                  <option>{t('sortBy')} {t('block')}</option>
+                  <option>{t('sortBy')} Area</option>
+                  <option>{t('sortBy')} {t('trees')}</option>
+                  <option>{t('sortBy')} {t('datePlanted')}</option>
                 </select>
               </>
             ) : (
@@ -438,10 +438,10 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
                   {t('createTask')}
                 </button>
                 <select className={`text-sm rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-700'} py-1 px-2`}>
-                  <option>Sort by Task</option>
-                  <option>Sort by Area</option>
-                  <option>Sort by {t('trees')}</option>
-                  <option>Sort by {t('density')}</option>
+                  <option>{t('sortBy')} Task</option>
+                  <option>{t('sortBy')} Area</option>
+                  <option>{t('sortBy')} {t('trees')}</option>
+                  <option>{t('sortBy')} {t('density')}</option>
                 </select>
               </>
             )}

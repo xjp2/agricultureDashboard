@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Plus } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface CreatePhaseModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ const CreatePhaseModal: React.FC<CreatePhaseModalProps> = ({
   onPhaseCreated,
   darkMode = false
 }) => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     phase: ''
   });
@@ -87,7 +89,7 @@ const CreatePhaseModal: React.FC<CreatePhaseModalProps> = ({
       <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg p-6 w-full max-w-md mx-4`}>
         <div className="flex items-center justify-between mb-4">
           <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-            Create New Phase
+            {t('createNewPhase')}
           </h2>
           <button
             onClick={onClose}
@@ -106,7 +108,7 @@ const CreatePhaseModal: React.FC<CreatePhaseModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Phase Name *
+              {t('phaseName')} *
             </label>
             <input
               type="text"
@@ -119,14 +121,13 @@ const CreatePhaseModal: React.FC<CreatePhaseModalProps> = ({
                   ? 'bg-gray-700 border-gray-600 text-white' 
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-green-500`}
-              placeholder="Enter phase name (e.g., Phase 1, North Field, etc.)"
+              placeholder={t('enterPhaseName')}
             />
           </div>
 
           <div className={`p-3 rounded-md ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
             <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              <strong>Note:</strong> Area, Trees, Density, and Block count will be automatically calculated 
-              based on the blocks and tasks you create within this phase.
+              <strong>{t('note')}:</strong> {t('areaTreesDensityNote')}
             </p>
           </div>
 
@@ -140,7 +141,7 @@ const CreatePhaseModal: React.FC<CreatePhaseModalProps> = ({
                   : 'border-gray-300 text-gray-700 hover:bg-gray-50'
               }`}
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               type="submit"
@@ -152,7 +153,7 @@ const CreatePhaseModal: React.FC<CreatePhaseModalProps> = ({
               ) : (
                 <>
                   <Plus size={16} className="mr-1" />
-                  Create Phase
+                  {t('createPhase')}
                 </>
               )}
             </button>

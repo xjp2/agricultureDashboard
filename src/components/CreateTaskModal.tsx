@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Plus } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { createTaskWithHierarchyUpdate } from '../lib/hierarchicalData';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface CreateTaskModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
   blockIdentifier,
   darkMode = false
 }) => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     task: '',
     area: '',
@@ -87,7 +89,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
       <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg p-6 w-full max-w-md mx-4`}>
         <div className="flex items-center justify-between mb-4">
           <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-            Create New Task for Block {blockIdentifier}
+            {t('createNewTask')} for Block {blockIdentifier}
           </h2>
           <button
             onClick={onClose}
@@ -106,7 +108,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Task Name *
+              {t('taskName')} *
             </label>
             <input
               type="text"
@@ -119,13 +121,13 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
                   ? 'bg-gray-700 border-gray-600 text-white' 
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-purple-500`}
-              placeholder="Enter task name (e.g., Task 1, Planting-A, etc.)"
+              placeholder={t('enterTaskName')}
             />
           </div>
 
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Area (acres)
+              Area ({t('acres')})
             </label>
             <input
               type="number"
@@ -138,13 +140,13 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
                   ? 'bg-gray-700 border-gray-600 text-white' 
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-purple-500`}
-              placeholder="Enter area in acres"
+              placeholder={t('enterAreaInAcres')}
             />
           </div>
 
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Number of Trees
+              {t('trees')}
             </label>
             <input
               type="number"
@@ -156,26 +158,25 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
                   ? 'bg-gray-700 border-gray-600 text-white' 
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-purple-500`}
-              placeholder="Enter number of trees"
+              placeholder={t('enterNumberOfTrees')}
             />
           </div>
 
           {formData.area && formData.trees && (
             <div className={`p-3 rounded-md ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
               <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                <strong>Calculated Density:</strong> {
+                <strong>{t('calculatedDensity')}:</strong> {
                   parseFloat(formData.area) > 0 && parseInt(formData.trees) > 0
                     ? (parseInt(formData.trees) / parseFloat(formData.area)).toFixed(2)
                     : '0'
-                } trees/ha
+                } {t('treesPerHa')}
               </p>
             </div>
           )}
 
           <div className={`p-3 rounded-md ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
             <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              <strong>Note:</strong> Density will be automatically calculated as Trees ÷ Area. 
-              Creating this task will update the parent block and phase data with the aggregated values.
+              <strong>{t('note')}:</strong> {t('densityCalculationNote')}
             </p>
           </div>
 
@@ -189,7 +190,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
                   : 'border-gray-300 text-gray-700 hover:bg-gray-50'
               }`}
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               type="submit"
@@ -201,7 +202,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
               ) : (
                 <>
                   <Plus size={16} className="mr-1" />
-                  Create Task
+                  {t('createTask')}
                 </>
               )}
             </button>

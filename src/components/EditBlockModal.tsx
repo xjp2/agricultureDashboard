@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Edit } from 'lucide-react';
 import { updateBlockWithHierarchyUpdate } from '../lib/hierarchicalData';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface EditBlockModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ const EditBlockModal: React.FC<EditBlockModalProps> = ({
   currentBlockName,
   darkMode = false
 }) => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     block: currentBlockName
   });
@@ -74,7 +76,7 @@ const EditBlockModal: React.FC<EditBlockModalProps> = ({
       <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg p-6 w-full max-w-md mx-4`}>
         <div className="flex items-center justify-between mb-4">
           <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-            Edit Block
+            {t('editBlock')}
           </h2>
           <button
             onClick={onClose}
@@ -93,7 +95,7 @@ const EditBlockModal: React.FC<EditBlockModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Block Name *
+              {t('blockName')} *
             </label>
             <input
               type="text"
@@ -106,14 +108,13 @@ const EditBlockModal: React.FC<EditBlockModalProps> = ({
                   ? 'bg-gray-700 border-gray-600 text-white' 
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Enter block name"
+              placeholder={t('enterBlockName')}
             />
           </div>
 
           <div className={`p-3 rounded-md ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
             <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              <strong>Note:</strong> Changing the block name will update all references 
-              to this block in tasks and maintain the hierarchical structure.
+              <strong>{t('note')}:</strong> {t('blockNameUpdateNote')}
             </p>
           </div>
 
@@ -127,7 +128,7 @@ const EditBlockModal: React.FC<EditBlockModalProps> = ({
                   : 'border-gray-300 text-gray-700 hover:bg-gray-50'
               }`}
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               type="submit"
@@ -139,7 +140,7 @@ const EditBlockModal: React.FC<EditBlockModalProps> = ({
               ) : (
                 <>
                   <Edit size={16} className="mr-1" />
-                  Update Block
+                  {t('updateBlock')}
                 </>
               )}
             </button>

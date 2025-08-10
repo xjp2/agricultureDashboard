@@ -8,12 +8,14 @@ import YearlyRainfallSummary from '../components/YearlyRainfallSummary';
 import StatCard from '../components/StatCard';
 import LocationCard from '../components/rainfall/LocationCard';
 import CreateLocationModal from '../components/rainfall/CreateLocationModal';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface RainfallTrackingProps {
   darkMode: boolean;
 }
 
 const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
+  const { t } = useLanguage();
   const [locations, setLocations] = useState<RainfallLocationWithStats[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<RainfallLocation | null>(null);
   const [rainfallData, setRainfallData] = useState<RainfallData[]>([]);
@@ -309,10 +311,10 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <div>
             <h2 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-              Rainfall Tracking Locations
+              {t('rainfallTrackingLocations')}
             </h2>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-              Select a location to track rainfall data
+              {t('selectLocationToTrack')}
             </p>
           </div>
           <button
@@ -322,14 +324,14 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
             }`}
           >
             <Plus size={16} className="mr-2" />
-            Add Location
+            {t('addLocation')}
           </button>
         </div>
 
         {/* Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <StatCard
-            title="Total Locations"
+            title={t('totalLocations')}
             value={locations.length.toString()}
             icon={<MapPin size={20} />}
             trend={0}
@@ -337,7 +339,7 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
             darkMode={darkMode}
           />
           <StatCard
-            title="Total Rainfall Records"
+            title={t('totalRainfallRecords')}
             value={locations.reduce((sum, loc) => sum + loc.entryCount, 0).toString()}
             icon={<CloudRain size={20} />}
             trend={0}
@@ -345,7 +347,7 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
             darkMode={darkMode}
           />
           <StatCard
-            title="Combined Rainfall"
+            title={t('combinedRainfall')}
             value={formatRainfall(locations.reduce((sum, loc) => sum + loc.totalRainfall, 0))}
             icon={<Droplets size={20} />}
             trend={0}
@@ -359,10 +361,10 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
           <div className="text-center py-12">
             <MapPin size={64} className="mx-auto mb-4 text-gray-400" />
             <h3 className={`text-lg font-medium mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              No Locations Found
+              {t('noDataFound')}
             </h3>
             <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-6`}>
-              Create your first rainfall tracking location to get started
+              {t('createFirstLocation')}
             </p>
             <button
               onClick={() => setShowCreateLocationModal(true)}
@@ -371,7 +373,7 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
               }`}
             >
               <Plus size={16} className="mr-2" />
-              Create First Location
+              {t('createFirstLocation')}
             </button>
           </div>
         ) : (
@@ -415,10 +417,10 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
           </button>
           <div>
             <h2 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-              {selectedLocation?.name} - Rainfall Tracking
+              {selectedLocation?.name} - {t('rainfallTracking')}
             </h2>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-              Monitor and track daily rainfall data for this location
+              {t('monitorAndTrackDaily')}
             </p>
           </div>
         </div>
@@ -471,7 +473,7 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard
-          title="Total Rainfall"
+          title={t('totalRainfall')}
           value={formatRainfall(yearlyTotal)}
           icon={<CloudRain size={20} />}
           trend={0}
@@ -479,7 +481,7 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
           darkMode={darkMode}
         />
         <StatCard
-          title="Rainy Days"
+          title={t('rainyDays')}
           value={getRainyDaysCount().toString()}
           icon={<Droplets size={20} />}
           trend={0}
@@ -487,7 +489,7 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
           darkMode={darkMode}
         />
         <StatCard
-          title="Average per Rainy Day"
+          title={t('averagePerRainyDay')}
           value={formatRainfall(getAverageRainfall())}
           icon={<TrendingUp size={20} />}
           trend={0}

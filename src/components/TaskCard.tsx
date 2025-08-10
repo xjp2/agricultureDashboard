@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Trees, Droplets, Hash, MapPin, Trash2 } from 'lucide-react';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import { deleteTaskWithHierarchyUpdate } from '../lib/hierarchicalData';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface TaskCardProps {
   id: number;
@@ -24,6 +25,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
   darkMode = false,
   onDeleted
 }) => {
+  const { t } = useLanguage();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -97,7 +99,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
             <button 
               className={`text-xs px-3 py-1.5 rounded-md ${darkMode ? 'bg-purple-900/20 text-purple-400 hover:bg-purple-900/30' : 'bg-purple-100 text-purple-800 hover:bg-purple-200'}`}
             >
-              Manage Task
+              {t('manageTask')}
             </button>
           </div>
         </div>
@@ -108,7 +110,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
         onClose={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
         title="Delete Task"
-        message="Are you sure you want to delete this task?"
+        message={t('deleteTaskWarning')}
         itemName={`Task ${task}`}
         loading={deleting}
         darkMode={darkMode}

@@ -3,6 +3,7 @@ import { Trees, Droplets, Calendar, Hash, Trash2, Edit } from 'lucide-react';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import EditBlockModal from './EditBlockModal';
 import { deleteBlockWithHierarchyUpdate } from '../lib/hierarchicalData';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface BlockCardProps {
   id: number;
@@ -33,6 +34,7 @@ const BlockCard: React.FC<BlockCardProps> = ({
   onDeleted,
   onUpdated
 }) => {
+  const { t } = useLanguage();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -109,7 +111,7 @@ const BlockCard: React.FC<BlockCardProps> = ({
 
           {datePlanted && (
             <div className="mb-3">
-              <p className="text-xs text-gray-500 dark:text-gray-400">Date Planted</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">{t('datePlanted')}</p>
               <p className={`text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>{formatDate(datePlanted)}</p>
             </div>
           )}
@@ -138,7 +140,7 @@ const BlockCard: React.FC<BlockCardProps> = ({
               onClick={onViewTask}
               className={`text-xs px-3 py-1.5 rounded-md ${darkMode ? 'bg-blue-900/20 text-blue-400 hover:bg-blue-900/30' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'}`}
             >
-              View Task
+              {t('viewTask')}
             </button>
           </div>
         </div>
@@ -149,7 +151,7 @@ const BlockCard: React.FC<BlockCardProps> = ({
         onClose={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
         title="Delete Block"
-        message="Are you sure you want to delete this block? This will also delete all tasks within this block."
+        message={t('deleteBlockWarning')}
         itemName={`Block ${block}`}
         loading={deleting}
         darkMode={darkMode}

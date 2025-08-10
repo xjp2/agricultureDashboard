@@ -10,6 +10,7 @@ import DepartmentSummaryReport from '../components/accounting/DepartmentSummaryR
 import DepartmentDetailReport from '../components/accounting/DepartmentDetailReport';
 import IntroducerCommissionReport from '../components/accounting/IntroducerCommissionReport';
 import StatCard from '../components/StatCard';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface AccountingManagementProps {
   darkMode: boolean;
@@ -18,6 +19,7 @@ interface AccountingManagementProps {
 type ReportView = 'entry' | 'worker-summary' | 'department-summary' | 'department-detail' | 'introducer-commission';
 
 const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode }) => {
+  const { t } = useLanguage();
   const [currentView, setCurrentView] = useState<ReportView>('entry');
   const [workers, setWorkers] = useState<WorkerData[]>([]);
   const [workOptions, setWorkOptions] = useState<WorkOption[]>([]);
@@ -187,34 +189,34 @@ const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode })
   const getViewTitle = () => {
     switch (currentView) {
       case 'entry':
-        return 'Data Entry';
+        return t('dataEntry');
       case 'worker-summary':
-        return 'Worker Summary Report';
+        return t('workerSummaryReport');
       case 'department-summary':
-        return 'Department Summary Report';
+        return t('departmentSummaryReport');
       case 'department-detail':
-        return 'Department Detail Report';
+        return t('departmentDetailReport');
       case 'introducer-commission':
-        return 'Introducer Commission Report';
+        return t('introducerCommissionReport');
       default:
-        return 'Accounting Management';
+        return t('accounting');
     }
   };
 
   const getViewDescription = () => {
     switch (currentView) {
       case 'entry':
-        return 'Enter and manage worker accounting data';
+        return t('enterWorkerPayment');
       case 'worker-summary':
-        return 'Complete earnings summary for all workers by category';
+        return t('completeEarningsSummary');
       case 'department-summary':
-        return 'Total earnings grouped by department/category';
+        return t('totalEarningsGrouped');
       case 'department-detail':
-        return 'Detailed worker earnings within specific departments';
+        return t('detailedWorkerEarnings');
       case 'introducer-commission':
-        return '5% commission calculations for worker introducers';
+        return t('commissionCalculations');
       default:
-        return 'Comprehensive accounting and payroll management';
+        return t('comprehensiveAccounting');
     }
   };
 
@@ -319,7 +321,7 @@ const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode })
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatCard
-          title="Total Earnings"
+          title={t('totalEarnings')}
           value={`$${totalEarnings.toFixed(2)}`}
           icon={<DollarSign size={20} />}
           trend={0}
@@ -327,7 +329,7 @@ const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode })
           darkMode={darkMode}
         />
         <StatCard
-          title="Active Workers"
+          title={t('activeWorkers')}
           value={uniqueWorkers.toString()}
           icon={<Users size={20} />}
           trend={0}
@@ -335,7 +337,7 @@ const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode })
           darkMode={darkMode}
         />
         <StatCard
-          title="This Month"
+          title={t('thisMonth')}
           value={`$${currentMonthEarnings.toFixed(2)}`}
           icon={<Calculator size={20} />}
           trend={0}
@@ -343,7 +345,7 @@ const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode })
           darkMode={darkMode}
         />
         <StatCard
-          title="Total Records"
+          title={t('totalRecords')}
           value={accountingData.length.toString()}
           icon={<FileText size={20} />}
           trend={0}
