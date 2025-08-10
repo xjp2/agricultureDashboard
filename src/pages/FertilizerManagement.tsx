@@ -99,7 +99,7 @@ const FertilizerManagement: React.FC<FertilizerManagementProps> = ({ darkMode })
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
-          <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>Loading phases...</p>
+          <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('loading')}</p>
         </div>
       </div>
     );
@@ -114,7 +114,7 @@ const FertilizerManagement: React.FC<FertilizerManagementProps> = ({ darkMode })
             onClick={fetchPhases}
             className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
           >
-            Retry
+            {t('tryAgain')}
           </button>
         </div>
       </div>
@@ -136,12 +136,12 @@ const FertilizerManagement: React.FC<FertilizerManagementProps> = ({ darkMode })
           )}
           <div>
             <h2 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-              {selectedPhase ? `Fertilizer Management - Phase ${selectedPhase.Phase}` : 'Fertilizer Management'}
+              {selectedPhase ? `${t('fertilizerManagement')} - ${t('phaseDetails')} ${selectedPhase.Phase}` : t('fertilizerManagement')}
             </h2>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
               {selectedPhase 
-                ? `Manage fertilizer programs for Phase ${selectedPhase.Phase}`
-                : 'Select a phase to manage fertilizer programs'
+                ? t('manageFertilizerPrograms', { phase: selectedPhase.Phase })
+                : t('selectPhaseToManageFertilizer')
               }
             </p>
           </div>
@@ -158,7 +158,7 @@ const FertilizerManagement: React.FC<FertilizerManagementProps> = ({ darkMode })
               }`}
             >
               <BarChart3 size={16} className="mr-2" />
-              Year-to-Year
+              {t('yearToYear')}
             </button>
             <button
               onClick={() => setActiveProgram('month')}
@@ -169,7 +169,7 @@ const FertilizerManagement: React.FC<FertilizerManagementProps> = ({ darkMode })
               }`}
             >
               <Calendar size={16} className="mr-2" />
-              Month-to-Month
+              {t('monthToMonth')}
             </button>
           </div>
         )}
@@ -187,10 +187,10 @@ const FertilizerManagement: React.FC<FertilizerManagementProps> = ({ darkMode })
           <div className="text-center">
             <Sprout size={48} className="mx-auto mb-4 text-green-500" />
             <p className={`text-lg font-medium mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Setting up Phase {selectedPhase.Phase}
+              {t('settingUpPhase', { phase: selectedPhase.Phase })}
             </p>
             <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-              Please wait while we configure the fertilizer program...
+              {t('configuringFertilizerProgram')}
             </p>
           </div>
         </div>
@@ -201,19 +201,19 @@ const FertilizerManagement: React.FC<FertilizerManagementProps> = ({ darkMode })
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
               <div>
                 <h3 className={`font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Program Start Date
+                  {t('programStartDate')}
                 </h3>
                 <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Started: {new Date(phaseStartDate.start_date).toLocaleDateString()}
+                  {t('programStarted')} {new Date(phaseStartDate.start_date).toLocaleDateString()}
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 items-end">
                 <div className="text-right">
                   <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Phase Area: {selectedPhase.Area || 0} ha
+                    {t('phaseArea')}: {selectedPhase.Area || 0} {t('ac')}
                   </p>
                   <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Total Blocks: {selectedPhase.Block || 0}
+                    {t('totalBlocks')}: {selectedPhase.Block || 0}
                   </p>
                 </div>
                 <button
@@ -224,7 +224,7 @@ const FertilizerManagement: React.FC<FertilizerManagementProps> = ({ darkMode })
                       : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
                   }`}
                 >
-                  Edit Start Date
+                  {t('editStartDate')}
                 </button>
               </div>
             </div>
