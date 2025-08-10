@@ -177,27 +177,6 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
 
     const monthNames = [
       'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-
-    const monthlyTotalsArray: MonthlyTotal[] = [];
-    for (let month = 0; month < 12; month++) {
-      const monthKey = `${currentYear}-${month}`;
-      monthlyTotalsArray.push({
-        month,
-        year: currentYear,
-        total: monthlyData[monthKey] || 0,
-        monthName: monthNames[month]
-      });
-    }
-
-    setMonthlyTotals(monthlyTotalsArray);
-
-    // Calculate yearly total
-    const yearly = monthlyTotalsArray.reduce((sum, month) => sum + month.total, 0);
-    setYearlyTotal(yearly);
-  };
-
   const convertUnit = (value: number, fromUnit: 'mm' | 'inches', toUnit: 'mm' | 'inches'): number => {
     if (fromUnit === toUnit) return value;
     if (fromUnit === 'mm' && toUnit === 'inches') return value / 25.4;
@@ -266,8 +245,9 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
   };
 
   const getAverageRainfall = () => {
-    const daysWithRain = rainfallData.filter(entry => entry.rainfall > 0).length;
-    return daysWithRain > 0 ? yearlyTotal / daysWithRain : 0;
+    const isLeapYear = (currentYear % 4 === 0 && currentYear % 100 !== 0) || (currentYear % 400 === 0);
+    const daysInYear = isLeapYear ? 366 : 365;
+    return daysInYear > 0 ? yearlyTotal / daysInYear : 0;
   };
 
   const getRainyDaysCount = () => {
@@ -446,17 +426,6 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
           </div>
         </div>
         <div className="flex gap-3 items-center">
-          <div className="flex items-center gap-2">
-            <Settings size={16} className={darkMode ? 'text-gray-400' : 'text-gray-600'} />
-            <select 
-              value={unit} 
-              onChange={(e) => setUnit(e.target.value as 'mm' | 'inches')}
-              className={`text-sm rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-700'} py-1 px-2`}
-            >
-              <option value="mm">Millimeters (mm)</option>
-              <option value="inches">Inches (in)</option>
-            </select>
-          </div>
           <div className="flex gap-1">
             <button
               onClick={() => setSelectedView('daily')}
@@ -510,8 +479,8 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
           darkMode={darkMode}
         />
         <StatCard
-          title={t('averagePerDayOfYear')}
-          value={getAverageRainyDays().toFixed(3)}
+          title={t('averageRainfallPerDay')}
+          value={formatRainfall(getAverageRainfall())}
           icon={<TrendingUp size={20} />}
           trend={0}
           color="purple"

@@ -110,7 +110,7 @@ export const translations: Translations = {
     totalRainfall: 'Total Rainfall',
     rainyDays: 'Rainy Days',
     averagePerRainyDay: 'Average per Rainy Day',
-    
+    averageRainfallPerDay: 'Average Rainfall per Day',
     // Worker Management
     workerManagement: 'Worker Management',
     manageWorkforce: 'Manage your workforce and employee information',
@@ -377,7 +377,7 @@ export const translations: Translations = {
     totalRainfall: 'Jumlah Hujan',
     rainyDays: 'Hari Hujan',
     averagePerRainyDay: 'Purata setiap Hari Hujan',
-
+    averageRainfallPerDay: 'Purata Hujan setiap Hari',
     // Worker Management
     workerManagement: 'Pengurusan Pekerja',
     manageWorkforce: 'Urus tenaga kerja dan maklumat pekerja anda',
@@ -644,7 +644,7 @@ export const translations: Translations = {
     totalRainfall: '总降雨量',
     rainyDays: '雨天',
     averagePerRainyDay: '每雨天平均',
-    averageRainyDaysPerDayOfYear: '每年日雨天比率',
+    averageRainfallPerDay: '每日平均降雨量',
 
     // Worker Management
     workerManagement: '工人管理',
