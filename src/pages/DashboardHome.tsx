@@ -342,6 +342,10 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
                 </span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+            </div>
             <button className={`w-full mt-4 px-3 py-2 text-sm rounded-md ${darkMode ? 'bg-blue-900/20 text-blue-400 hover:bg-blue-900/30' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'}`}>
               <Plus size={16} className="inline mr-1" />
               {t('recordRainfall')}
