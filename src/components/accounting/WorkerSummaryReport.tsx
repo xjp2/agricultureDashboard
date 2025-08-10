@@ -240,13 +240,13 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Search
+                {t('search')}
               </label>
               <input
                 type="text"
                 value={filterConfig.search}
                 onChange={(e) => setFilterConfig(prev => ({ ...prev, search: e.target.value }))}
-                placeholder="Search by name or EID"
+                placeholder={t('searchByNameOrEid')}
                 className={`w-full px-3 py-2 border rounded-md ${
                   darkMode 
                     ? 'bg-gray-700 border-gray-600 text-white' 
@@ -256,7 +256,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
             </div>
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                From Month
+                {t('fromMonth')}
               </label>
               <select
                 value={filterConfig.monthFrom}
@@ -267,7 +267,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               >
-                <option value="">All months from...</option>
+                <option value="">{t('allMonthsFrom')}</option>
                 {generateMonthOptions().map(month => (
                   <option key={month} value={month}>{month}</option>
                 ))}
@@ -275,7 +275,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
             </div>
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                To Month
+                {t('toMonth')}
               </label>
               <select
                 value={filterConfig.monthTo}
@@ -286,7 +286,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               >
-                <option value="">All months to...</option>
+                <option value="">{t('allMonthsTo')}</option>
                 {generateMonthOptions().map(month => (
                   <option key={month} value={month}>{month}</option>
                 ))}
@@ -294,7 +294,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
             </div>
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Category
+                {t('category')}
               </label>
               <select
                 value={filterConfig.category}
@@ -305,7 +305,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               >
-                <option value="">All Categories</option>
+                <option value="">{t('allCategories')}</option>
                 {allCategories.map(category => (
                   <option key={category} value={category}>{category}</option>
                 ))}
@@ -313,7 +313,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
             </div>
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Work Type
+                {t('workType')}
               </label>
               <select
                 value={filterConfig.work}
@@ -324,7 +324,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               >
-                <option value="">All Work Types</option>
+                <option value="">{t('allWorkTypes')}</option>
                 {allWorkTypes.map(work => (
                   <option key={work} value={work}>{work}</option>
                 ))}
