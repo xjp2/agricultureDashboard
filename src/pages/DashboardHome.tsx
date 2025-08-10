@@ -230,9 +230,9 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
     <div className="space-y-6">
       <div>
         <h2 className={`text-xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-          {t('farmOverview')}
+          {t('systemOverview')}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard 
             title={t('totalPhases')} 
             value={stats.phases.toString()} 
@@ -242,9 +242,9 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
             darkMode={darkMode}
           />
           <StatCard 
-            title={t('totalArea')} 
-            value={`${stats.totalArea.toFixed(1)} ${t('acres')}`} 
-            icon={<Sprout size={20} />} 
+            title={t('totalBlocks')} 
+            value={stats.blocks.toString()} 
+            icon={<Package size={20} />} 
             trend={0} 
             color="green"
             darkMode={darkMode}
@@ -258,9 +258,9 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
             darkMode={darkMode}
           />
           <StatCard 
-            title={t('monthlyPayroll')} 
-            value={`$${stats.currentMonthEarnings.toFixed(2)}`} 
-            icon={<Calculator size={20} />} 
+            title={t('activeTasks')} 
+            value={stats.tasks.toString()} 
+            icon={<Activity size={20} />} 
             trend={0} 
             color="yellow"
             darkMode={darkMode}
@@ -268,81 +268,211 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
         </div>
       </div>
 
-      {/* System Overview */}
+      {/* Detailed Statistics */}
       <div>
-        <h2 className={`text-xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-          {t('systemOverview')}
+        <h2 className={`text-xl font-semibold mb-6 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+          {t('detailedStatistics')}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Field Visualization Summary */}
-          <div className={`border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 shadow-sm`}>
+          <div className={`border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow`}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-50 text-green-700'}`}>
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-50 text-green-700'}`}>
                   <Map size={20} />
                 </div>
-                <h3 className={`ml-3 font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`ml-3 font-semibold text-lg ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                   {t('fields')}
                 </h3>
               </div>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalPhases')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.phases}</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.phases}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalBlocks')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.blocks}</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.blocks}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('activeTasks')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.tasks}</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.tasks}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalArea')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.totalArea.toFixed(1)} {t('acres')}</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.totalArea.toFixed(1)} {t('acres')}</span>
+              </div>
+              <div className="flex justify-between border-t pt-3 border-gray-200 dark:border-gray-700">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalTrees')}:</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-green-400' : 'text-green-600'}`}>{stats.totalTrees.toLocaleString()}</span>
               </div>
             </div>
-            <button className={`w-full mt-4 px-3 py-2 text-sm rounded-md ${darkMode ? 'bg-green-900/20 text-green-400 hover:bg-green-900/30' : 'bg-green-100 text-green-800 hover:bg-green-200'}`}>
-              <Plus size={16} className="inline mr-1" />
-              {t('addNewPhase')}
-            </button>
           </div>
 
           {/* Rainfall Tracking Summary */}
-          <div className={`border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 shadow-sm`}>
+          <div className={`border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow`}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-700'}`}>
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-700'}`}>
                   <CloudRain size={20} />
                 </div>
-                <h3 className={`ml-3 font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h3 className={`ml-3 font-semibold text-lg ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                   {t('rainfall')}
                 </h3>
               </div>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('trackingLocations')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.rainfallLocations}</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.rainfallLocations}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('yearlyRainfall')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.yearlyRainfall.toFixed(1)} {t('mm')}</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.yearlyRainfall.toFixed(1)} {t('mm')}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('rainyDays')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.rainyDays}</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.rainyDays}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between border-t pt-3 border-gray-200 dark:border-gray-700">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('averageDaily')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {stats.rainyDays > 0 ? (stats.yearlyRainfall / stats.rainyDays).toFixed(1) : '0.0'} {t('mm')}
+                <span className={`text-sm font-semibold ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                  {stats.rainyDays > 0 ? (stats.yearlyRainfall / stats.rainyDays).toFixed(1) : '0.0'} mm/day
                 </span>
               </div>
             </div>
           </div>
+
+          {/* Worker Management Summary */}
+          <div className={`border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow`}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${darkMode ? 'bg-purple-900/20 text-purple-400' : 'bg-purple-50 text-purple-700'}`}>
+                  <Users size={20} />
+                </div>
+                <h3 className={`ml-3 font-semibold text-lg ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  {t('workers')}
+                </h3>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalWorkers')}:</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.totalWorkers}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('departments')}:</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.departments}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('companies')}:</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.companies}</span>
+              </div>
+              <div className="flex justify-between border-t pt-3 border-gray-200 dark:border-gray-700">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('newHiresThisMonth')}:</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>{stats.newHiresThisMonth}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Accounting Summary */}
+          <div className={`border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow`}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${darkMode ? 'bg-yellow-900/20 text-yellow-400' : 'bg-yellow-50 text-yellow-700'}`}>
+                  <Calculator size={20} />
+                </div>
+                <h3 className={`ml-3 font-semibold text-lg ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  {t('accounting')}
+                </h3>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalEarnings')}:</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>${stats.totalEarnings.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('thisMonth')}:</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>${stats.currentMonthEarnings.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalRecords')}:</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.totalRecords}</span>
+              </div>
+              <div className="flex justify-between border-t pt-3 border-gray-200 dark:border-gray-700">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('averagePerRecord')}:</span>
+                <span className={`text-sm font-semibold ${darkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
+                  ${stats.totalRecords > 0 ? (stats.totalEarnings / stats.totalRecords).toFixed(2) : '0.00'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div>
+        <h2 className={`text-xl font-semibold mb-6 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+          {t('quickActions')}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <button className={`p-4 rounded-xl border text-left transition-all hover:shadow-md ${darkMode ? 'bg-gray-800 border-gray-700 hover:border-green-500' : 'bg-white border-gray-200 hover:border-green-400'}`}>
+            <div className="flex items-center mb-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-50 text-green-700'}`}>
+                <Plus size={20} />
+              </div>
+              <h3 className={`ml-3 font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                {t('addNewPhase')}
+              </h3>
+            </div>
+            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {t('createNewFieldPhase')}
+            </p>
+          </button>
+          
+          <button className={`p-4 rounded-xl border text-left transition-all hover:shadow-md ${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:border-blue-400'}`}>
+            <div className="flex items-center mb-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-700'}`}>
+                <CloudRain size={20} />
+              </div>
+              <h3 className={`ml-3 font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                {t('recordRainfall')}
+              </h3>
+            </div>
+            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {t('addDailyRainfallData')}
+            </p>
+          </button>
+          
+          <button className={`p-4 rounded-xl border text-left transition-all hover:shadow-md ${darkMode ? 'bg-gray-800 border-gray-700 hover:border-purple-500' : 'bg-white border-gray-200 hover:border-purple-400'}`}>
+            <div className="flex items-center mb-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${darkMode ? 'bg-purple-900/20 text-purple-400' : 'bg-purple-50 text-purple-700'}`}>
+                <Users size={20} />
+              </div>
+              <h3 className={`ml-3 font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                {t('addWorker')}
+              </h3>
+            </div>
+            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {t('registerNewWorker')}
+            </p>
+          </button>
+          
+          <button className={`p-4 rounded-xl border text-left transition-all hover:shadow-md ${darkMode ? 'bg-gray-800 border-gray-700 hover:border-yellow-500' : 'bg-white border-gray-200 hover:border-yellow-400'}`}>
+            <div className="flex items-center mb-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${darkMode ? 'bg-yellow-900/20 text-yellow-400' : 'bg-yellow-50 text-yellow-700'}`}>
+                <Calculator size={20} />
+              </div>
+              <h3 className={`ml-3 font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                {t('addPayment')}
+              </h3>
+            </div>
+            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {t('recordWorkerPayment')}
+            </p>
+          </button>
         </div>
       </div>
     </div>
