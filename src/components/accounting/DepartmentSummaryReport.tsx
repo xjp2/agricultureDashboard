@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { FileText, Download, TrendingUp, Users } from 'lucide-react';
 import { AccountingData, FilterConfig } from '../../lib/accountingTypes';
 import { WorkerData } from '../../lib/workersTypes';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface DepartmentSummaryReportProps {
   accountingData: AccountingData[];
@@ -21,6 +22,7 @@ const DepartmentSummaryReport: React.FC<DepartmentSummaryReportProps> = ({
   workers,
   darkMode
 }) => {
+  const { t } = useLanguage();
   const [filterConfig, setFilterConfig] = useState<FilterConfig>({
     monthFrom: '',
     monthTo: '',
@@ -137,10 +139,10 @@ const DepartmentSummaryReport: React.FC<DepartmentSummaryReportProps> = ({
           <FileText size={24} className="text-purple-500" />
           <div>
             <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Department Summary Report
+              {t('departmentSummaryReport')}
             </h3>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Total earnings grouped by department/category
+              {t('totalEarningsGrouped')}
             </p>
           </div>
         </div>
@@ -151,7 +153,7 @@ const DepartmentSummaryReport: React.FC<DepartmentSummaryReportProps> = ({
           }`}
         >
           <Download size={16} className="mr-1" />
-          Export CSV
+          {t('export')} CSV
         </button>
       </div>
 
@@ -160,7 +162,7 @@ const DepartmentSummaryReport: React.FC<DepartmentSummaryReportProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              From Month
+              {t('fromMonth')}
             </label>
             <select
               value={filterConfig.monthFrom}
@@ -171,7 +173,7 @@ const DepartmentSummaryReport: React.FC<DepartmentSummaryReportProps> = ({
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-purple-500`}
             >
-              <option value="">All months from...</option>
+              <option value="">{t('allMonthsFrom')}</option>
               {generateMonthOptions().map(month => (
                 <option key={month} value={month}>{month}</option>
               ))}
@@ -179,7 +181,7 @@ const DepartmentSummaryReport: React.FC<DepartmentSummaryReportProps> = ({
           </div>
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              To Month
+              {t('toMonth')}
             </label>
             <select
               value={filterConfig.monthTo}
@@ -190,7 +192,7 @@ const DepartmentSummaryReport: React.FC<DepartmentSummaryReportProps> = ({
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-purple-500`}
             >
-              <option value="">All months to...</option>
+              <option value="">{t('allMonthsTo')}</option>
               {generateMonthOptions().map(month => (
                 <option key={month} value={month}>{month}</option>
               ))}
@@ -198,7 +200,7 @@ const DepartmentSummaryReport: React.FC<DepartmentSummaryReportProps> = ({
           </div>
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Work Type
+              {t('workType')}
             </label>
             <select
               value={filterConfig.work}
@@ -209,7 +211,7 @@ const DepartmentSummaryReport: React.FC<DepartmentSummaryReportProps> = ({
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-purple-500`}
             >
-              <option value="">All Work Types</option>
+              <option value="">{t('allWorkTypes')}</option>
               {allWorkTypes.map(work => (
                 <option key={work} value={work}>{work}</option>
               ))}
@@ -261,19 +263,19 @@ const DepartmentSummaryReport: React.FC<DepartmentSummaryReportProps> = ({
           <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-50'}>
             <tr>
               <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                Department/Category
+                {t('department')}/{t('category')}
               </th>
               <th className={`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                Worker Count
+                {t('workerCount')}
               </th>
               <th className={`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                Total Earnings
+                {t('totalEarnings')}
               </th>
               <th className={`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                Average per Worker
+                {t('averagePerWorker')}
               </th>
               <th className={`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                Percentage of Total
+                {t('percentageOfTotal')}
               </th>
             </tr>
           </thead>
@@ -283,8 +285,8 @@ const DepartmentSummaryReport: React.FC<DepartmentSummaryReportProps> = ({
                 <td colSpan={5} className={`px-6 py-12 text-center ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                   <div className="flex flex-col items-center">
                     <FileText size={48} className="mb-4 text-gray-400" />
-                    <p className="text-lg font-medium mb-2">No department data found</p>
-                    <p className="text-sm">Try adjusting your filters or add some accounting entries</p>
+                    <p className="text-lg font-medium mb-2">{t('noDepartmentData')}</p>
+                    <p className="text-sm">{t('tryAdjustingFilters')}</p>
                   </div>
                 </td>
               </tr>
@@ -336,12 +338,12 @@ const DepartmentSummaryReport: React.FC<DepartmentSummaryReportProps> = ({
           <div className="flex justify-between items-center">
             <div>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                {departmentSummaries.length} departments • {totalWorkers} workers
+                {departmentSummaries.length} {t('departments')} • {totalWorkers} {t('workers')}
               </p>
             </div>
             <div>
               <p className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                Grand Total: ${totalEarnings.toFixed(2)}
+                {t('grandTotal')}: ${totalEarnings.toFixed(2)}
               </p>
             </div>
           </div>

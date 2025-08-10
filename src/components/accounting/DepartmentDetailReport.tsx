@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { TrendingUp, Download, Users, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { AccountingData, FilterConfig, SortConfig } from '../../lib/accountingTypes';
 import { WorkerData } from '../../lib/workersTypes';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface DepartmentDetailReportProps {
   accountingData: AccountingData[];
@@ -21,6 +22,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
   workers,
   darkMode
 }) => {
+  const { t } = useLanguage();
   const [selectedDepartment, setSelectedDepartment] = useState<string>('');
   const [filterConfig, setFilterConfig] = useState<FilterConfig>({
     monthFrom: '',
@@ -186,10 +188,10 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
           <TrendingUp size={24} className="text-yellow-500" />
           <div>
             <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Department Detail Report
+              {t('departmentDetailReport')}
             </h3>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Detailed worker earnings within specific departments
+              {t('detailedWorkerEarnings')}
             </p>
           </div>
         </div>
@@ -201,7 +203,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
             }`}
           >
             <Download size={16} className="mr-1" />
-            Export CSV
+            {t('export')} CSV
           </button>
         )}
       </div>
@@ -211,7 +213,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Select Department/Category *
+              {t('selectDepartmentCategory')} *
             </label>
             <select
               value={selectedDepartment}
@@ -222,7 +224,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-yellow-500`}
             >
-              <option value="">Choose a department to view details</option>
+              <option value="">{t('chooseDepartmentToView')}</option>
               {allDepartments.map(dept => (
                 <option key={dept} value={dept}>{dept}</option>
               ))}
@@ -234,7 +236,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
                 {selectedDepartment}
               </p>
               <p className={`text-xs ${darkMode ? 'text-yellow-300' : 'text-yellow-700'}`}>
-                {departmentWorkerCount} workers • ${departmentTotal.toFixed(2)} total earnings
+                {departmentWorkerCount} {t('workers')} • ${departmentTotal.toFixed(2)} {t('totalEarnings')}
               </p>
             </div>
           )}
@@ -248,13 +250,13 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Search Workers
+                  {t('searchWorkers')}
                 </label>
                 <input
                   type="text"
                   value={filterConfig.search}
                   onChange={(e) => setFilterConfig(prev => ({ ...prev, search: e.target.value }))}
-                  placeholder="Search by name or EID"
+                  placeholder={t('searchByNameOrEid')}
                   className={`w-full px-3 py-2 border rounded-md ${
                     darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white' 
@@ -264,7 +266,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
               </div>
               <div>
                 <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  From Month
+                  {t('fromMonth')}
                 </label>
                 <select
                   value={filterConfig.monthFrom}
@@ -275,7 +277,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
                       : 'bg-white border-gray-300 text-gray-900'
                   } focus:outline-none focus:ring-2 focus:ring-yellow-500`}
                 >
-                  <option value="">All months from...</option>
+                  <option value="">{t('allMonthsFrom')}</option>
                   {generateMonthOptions().map(month => (
                     <option key={month} value={month}>{month}</option>
                   ))}
@@ -283,7 +285,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
               </div>
               <div>
                 <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  To Month
+                  {t('toMonth')}
                 </label>
                 <select
                   value={filterConfig.monthTo}
@@ -294,7 +296,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
                       : 'bg-white border-gray-300 text-gray-900'
                   } focus:outline-none focus:ring-2 focus:ring-yellow-500`}
                 >
-                  <option value="">All months to...</option>
+                  <option value="">{t('allMonthsTo')}</option>
                   {generateMonthOptions().map(month => (
                     <option key={month} value={month}>{month}</option>
                   ))}
@@ -302,7 +304,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
               </div>
               <div>
                 <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Work Type
+                  {t('workType')}
                 </label>
                 <select
                   value={filterConfig.work}
@@ -313,7 +315,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
                       : 'bg-white border-gray-300 text-gray-900'
                   } focus:outline-none focus:ring-2 focus:ring-yellow-500`}
                 >
-                  <option value="">All Work Types</option>
+                  <option value="">{t('allWorkTypes')}</option>
                   {allWorkTypes.map(work => (
                     <option key={work} value={work}>{work}</option>
                   ))}
@@ -332,7 +334,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
                     onClick={() => handleSort('eid')}
                   >
                     <div className="flex items-center space-x-1">
-                      <span>EID</span>
+                      <span>{t('employeeId')}</span>
                       {getSortIcon('eid')}
                     </div>
                   </th>
@@ -341,7 +343,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
                     onClick={() => handleSort('name')}
                   >
                     <div className="flex items-center space-x-1">
-                      <span>Name</span>
+                      <span>{t('name')}</span>
                       {getSortIcon('name')}
                     </div>
                   </th>
@@ -350,7 +352,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
                     onClick={() => handleSort('entryCount')}
                   >
                     <div className="flex items-center justify-center space-x-1">
-                      <span>Entries</span>
+                      <span>{t('entries')}</span>
                       {getSortIcon('entryCount')}
                     </div>
                   </th>
@@ -359,12 +361,12 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
                     onClick={() => handleSort('totalEarnings')}
                   >
                     <div className="flex items-center justify-center space-x-1">
-                      <span>Total Earnings</span>
+                      <span>{t('totalEarnings')}</span>
                       {getSortIcon('totalEarnings')}
                     </div>
                   </th>
                   <th className={`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                    Average per Entry
+                    {t('averagePerEntry')}
                   </th>
                 </tr>
               </thead>
@@ -374,11 +376,11 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
                     <td colSpan={5} className={`px-6 py-12 text-center ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                       <div className="flex flex-col items-center">
                         <Users size={48} className="mb-4 text-gray-400" />
-                        <p className="text-lg font-medium mb-2">No workers found</p>
+                        <p className="text-lg font-medium mb-2">{t('noWorkersFound')}</p>
                         <p className="text-sm">
                           {selectedDepartment 
-                            ? 'No workers found in this department with the current filters'
-                            : 'Select a department to view worker details'
+                            ? t('noWorkersInDepartment')
+                            : t('selectDepartmentToView')
                           }
                         </p>
                       </div>
@@ -415,15 +417,15 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
               <div className="flex justify-between items-center">
                 <div>
                   <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {selectedDepartment} Department Summary
+                    {selectedDepartment} {t('departmentSummary')}
                   </p>
                   <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                    {departmentWorkerCount} workers • Average: ${(departmentTotal / departmentWorkerCount).toFixed(2)} per worker
+                    {departmentWorkerCount} {t('workers')} • {t('average')}: ${(departmentTotal / departmentWorkerCount).toFixed(2)} {t('perWorker')}
                   </p>
                 </div>
                 <div>
                   <p className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Total: ${departmentTotal.toFixed(2)}
+                    {t('total')}: ${departmentTotal.toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -434,10 +436,10 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
         <div className="text-center py-12">
           <TrendingUp size={64} className="mx-auto mb-4 text-gray-400" />
           <h3 className={`text-lg font-medium mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-            Select a Department
+            {t('selectDepartment')}
           </h3>
           <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-6`}>
-            Choose a department from the dropdown above to view detailed worker earnings
+            {t('chooseDepartmentFromDropdown')}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-2xl mx-auto">
             {allDepartments.map(dept => (
@@ -452,7 +454,7 @@ const DepartmentDetailReport: React.FC<DepartmentDetailReportProps> = ({
               >
                 <p className="font-medium">{dept}</p>
                 <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {workers.filter(w => w.Department === dept).length} workers
+                  {workers.filter(w => w.Department === dept).length} {t('workers')}
                 </p>
               </button>
             ))}

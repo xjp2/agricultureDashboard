@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { DollarSign, Download, ChevronDown, ChevronRight, Users, TrendingUp } from 'lucide-react';
 import { AccountingData, FilterConfig } from '../../lib/accountingTypes';
 import { WorkerData } from '../../lib/workersTypes';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface IntroducerCommissionReportProps {
   accountingData: AccountingData[];
@@ -26,6 +27,7 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
   workers,
   darkMode
 }) => {
+  const { t } = useLanguage();
   const [filterConfig, setFilterConfig] = useState<FilterConfig>({
     monthFrom: '',
     monthTo: '',
@@ -180,10 +182,10 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
           <DollarSign size={24} className="text-indigo-500" />
           <div>
             <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Introducer Commission Report
+              {t('introducerCommissionReport')}
             </h3>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              5% commission calculations for worker introducers
+              {t('commissionCalculations')}
             </p>
           </div>
         </div>
@@ -194,7 +196,7 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
           }`}
         >
           <Download size={16} className="mr-1" />
-          Export CSV
+          {t('export')} CSV
         </button>
       </div>
 
@@ -203,7 +205,7 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              From Month
+              {t('fromMonth')}
             </label>
             <select
               value={filterConfig.monthFrom}
@@ -214,7 +216,7 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-indigo-500`}
             >
-              <option value="">All months from...</option>
+              <option value="">{t('allMonthsFrom')}</option>
               {generateMonthOptions().map(month => (
                 <option key={month} value={month}>{month}</option>
               ))}
@@ -222,7 +224,7 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
           </div>
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              To Month
+              {t('toMonth')}
             </label>
             <select
               value={filterConfig.monthTo}
@@ -233,7 +235,7 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-indigo-500`}
             >
-              <option value="">All months to...</option>
+              <option value="">{t('allMonthsTo')}</option>
               {generateMonthOptions().map(month => (
                 <option key={month} value={month}>{month}</option>
               ))}
@@ -241,7 +243,7 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
           </div>
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Category
+              {t('category')}
             </label>
             <select
               value={filterConfig.category}
@@ -252,7 +254,7 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-indigo-500`}
             >
-              <option value="">All Categories</option>
+              <option value="">{t('allCategories')}</option>
               {allCategories.map(category => (
                 <option key={category} value={category}>{category}</option>
               ))}
@@ -260,7 +262,7 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
           </div>
           <div>
             <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Work Type
+              {t('workType')}
             </label>
             <select
               value={filterConfig.work}
@@ -271,7 +273,7 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-indigo-500`}
             >
-              <option value="">All Work Types</option>
+              <option value="">{t('allWorkTypes')}</option>
               {allWorkTypes.map(work => (
                 <option key={work} value={work}>{work}</option>
               ))}
@@ -323,10 +325,10 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
           <div className="p-12 text-center">
             <DollarSign size={64} className="mx-auto mb-4 text-gray-400" />
             <h3 className={`text-lg font-medium mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              No Commission Data
+              {t('noCommissionData')}
             </h3>
             <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              No workers with introducers have earnings in the selected period
+              {t('noWorkersWithIntroducers')}
             </p>
           </div>
         ) : (
@@ -354,7 +356,7 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
                           {commission.introducerName}
                         </h4>
                         <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                          {commission.introducedWorkers.length} introduced worker{commission.introducedWorkers.length !== 1 ? 's' : ''}
+                          {commission.introducedWorkers.length} {t('introducedWorkers')}
                         </p>
                       </div>
                     </div>
@@ -363,7 +365,7 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
                         ${commission.commissionAmount.toFixed(2)}
                       </p>
                       <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        5% of ${commission.totalCommissionBase.toFixed(2)}
+                        5% {t('of')} ${commission.totalCommissionBase.toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -377,19 +379,19 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
                         <thead>
                           <tr className={`border-b ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}>
                             <th className={`px-4 py-2 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase`}>
-                              EID
+                              {t('employeeId')}
                             </th>
                             <th className={`px-4 py-2 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase`}>
-                              Worker Name
+                              {t('workerName')}
                             </th>
                             <th className={`px-4 py-2 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase`}>
-                              Entries
+                              {t('entries')}
                             </th>
                             <th className={`px-4 py-2 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase`}>
-                              Total Earnings
+                              {t('totalEarnings')}
                             </th>
                             <th className={`px-4 py-2 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase`}>
-                              Commission (5%)
+                              {t('commission')} (5%)
                             </th>
                           </tr>
                         </thead>
@@ -432,15 +434,15 @@ const IntroducerCommissionReport: React.FC<IntroducerCommissionReportProps> = ({
           <div className="flex justify-between items-center">
             <div>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                {introducerCommissions.length} introducers • {totalIntroducedWorkers} introduced workers
+                {introducerCommissions.length} {t('introducers')} • {totalIntroducedWorkers} {t('introducedWorkers')}
               </p>
               <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                Commission Rate: 5% of introduced workers' total earnings
+                {t('commissionRate')}: 5% {t('of')} {t('introducedWorkersEarnings')}
               </p>
             </div>
             <div>
               <p className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                Total Commissions: ${totalCommissions.toFixed(2)}
+                {t('totalCommissions')}: ${totalCommissions.toFixed(2)}
               </p>
             </div>
           </div>

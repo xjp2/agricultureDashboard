@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Plus, Edit, Trash2, Settings } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { WorkOption } from '../../lib/accountingTypes';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface WorkOptionManagerProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ const WorkOptionManager: React.FC<WorkOptionManagerProps> = ({
   onWorkOptionUpdated,
   darkMode
 }) => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     work_name: '',
     description: ''
@@ -133,10 +135,10 @@ const WorkOptionManager: React.FC<WorkOptionManagerProps> = ({
             </div>
             <div>
               <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                Manage Work Options
+                {t('manageWorkOptions')}
               </h2>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Add, edit, or remove work types for accounting entries
+                {t('addEditRemoveWorkTypes')}
               </p>
             </div>
           </div>
@@ -157,13 +159,13 @@ const WorkOptionManager: React.FC<WorkOptionManagerProps> = ({
         {/* Add/Edit Form */}
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'} mb-6`}>
           <h3 className={`text-sm font-medium mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-            {editingOption ? 'Edit Work Option' : 'Add New Work Option'}
+            {editingOption ? t('editWorkOption') : t('addNewWorkOption')}
           </h3>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Work Name *
+                {t('workName')} *
               </label>
               <input
                 type="text"
@@ -176,13 +178,13 @@ const WorkOptionManager: React.FC<WorkOptionManagerProps> = ({
                     ? 'bg-gray-600 border-gray-500 text-white focus:ring-blue-500' 
                     : 'bg-white border-gray-300 text-gray-900 focus:ring-blue-500'
                 } focus:outline-none focus:ring-2`}
-                placeholder="Enter work type name"
+                placeholder={t('enterWorkTypeName')}
               />
             </div>
 
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Description
+                {t('description')}
               </label>
               <textarea
                 name="description"
@@ -194,7 +196,7 @@ const WorkOptionManager: React.FC<WorkOptionManagerProps> = ({
                     ? 'bg-gray-600 border-gray-500 text-white focus:ring-blue-500' 
                     : 'bg-white border-gray-300 text-gray-900 focus:ring-blue-500'
                 } focus:outline-none focus:ring-2`}
-                placeholder="Optional description"
+                placeholder={t('optionalDescription')}
               />
             </div>
 
@@ -225,7 +227,7 @@ const WorkOptionManager: React.FC<WorkOptionManagerProps> = ({
                     {editingOption ? 'Update' : 'Add'} Work Option
                   </>
                 )}
-              </button>
+                {editingOption ? t('update') : t('add')} {t('workOption')}
             </div>
           </form>
         </div>
@@ -233,13 +235,13 @@ const WorkOptionManager: React.FC<WorkOptionManagerProps> = ({
         {/* Existing Work Options */}
         <div>
           <h3 className={`text-sm font-medium mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-            Existing Work Options ({workOptions.length})
+            {t('existingWorkOptions')} ({workOptions.length})
           </h3>
           
           {workOptions.length === 0 ? (
             <div className="text-center py-8">
               <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                No work options available. Add your first work option above.
+                {t('noWorkOptionsAvailable')}
               </p>
             </div>
           ) : (
@@ -267,14 +269,14 @@ const WorkOptionManager: React.FC<WorkOptionManagerProps> = ({
                     <button
                       onClick={() => handleEdit(option)}
                       className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-600 text-blue-400' : 'hover:bg-gray-100 text-blue-600'}`}
-                      title="Edit work option"
+                      title={t('editWorkOption')}
                     >
                       <Edit size={16} />
                     </button>
                     <button
                       onClick={() => handleDelete(option)}
                       className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-600 text-red-400' : 'hover:bg-gray-100 text-red-600'}`}
-                      title="Delete work option"
+                      title={t('deleteWorkOption')}
                     >
                       <Trash2 size={16} />
                     </button>

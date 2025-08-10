@@ -3,6 +3,7 @@ import { Users, Download, Search, Filter, ArrowUpDown, ArrowUp, ArrowDown } from
 import { AccountingData, FilterConfig, SortConfig } from '../../lib/accountingTypes';
 import { WorkerData } from '../../lib/workersTypes';
 import WorkerDetailModal from './WorkerDetailModal';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface WorkerSummaryReportProps {
   accountingData: AccountingData[];
@@ -22,6 +23,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
   workers,
   darkMode
 }) => {
+  const { t } = useLanguage();
   const [filterConfig, setFilterConfig] = useState<FilterConfig>({
     monthFrom: '',
     monthTo: '',
@@ -203,10 +205,10 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
           <Users size={24} className="text-blue-500" />
           <div>
             <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Worker Summary Report
+              {t('workerSummaryReport')}
             </h3>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Complete earnings breakdown by worker and category
+              {t('completeEarningsSummary')}
             </p>
           </div>
         </div>
@@ -218,7 +220,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
             }`}
           >
             <Filter size={16} className="mr-1" />
-            Filters
+            {t('filters')}
           </button>
           <button
             onClick={handleExport}
@@ -227,7 +229,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
             }`}
           >
             <Download size={16} className="mr-1" />
-            Export CSV
+            {t('export')} CSV
           </button>
         </div>
       </div>
@@ -337,12 +339,12 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
         <div className="flex justify-between items-center">
           <div>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Showing {workerSummaries.length} workers
+              {t('showing')} {workerSummaries.length} {t('workers')}
             </p>
           </div>
           <div>
             <p className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-              Total: ${totalGrandTotal.toFixed(2)}
+              {t('total')}: ${totalGrandTotal.toFixed(2)}
             </p>
           </div>
         </div>
@@ -373,7 +375,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
                   onClick={() => handleSort('eid')}
                 >
                   <div className="flex items-center space-x-1">
-                    <span>EID</span>
+                    <span>{t('employeeId')}</span>
                     {getSortIcon('eid')}
                   </div>
                 </th>
@@ -382,7 +384,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
                   onClick={() => handleSort('name')}
                 >
                   <div className="flex items-center space-x-1">
-                    <span>Name</span>
+                    <span>{t('name')}</span>
                     {getSortIcon('name')}
                   </div>
                 </th>
@@ -403,7 +405,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
                   onClick={() => handleSort('grandTotal')}
                 >
                   <div className="flex items-center justify-center space-x-1">
-                    <span>Grand Total</span>
+                    <span>{t('total')}</span>
                     {getSortIcon('grandTotal')}
                   </div>
                 </th>
@@ -415,8 +417,8 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
                   <td colSpan={allCategories.length + 3} className={`px-6 py-12 text-center ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                     <div className="flex flex-col items-center">
                       <Users size={48} className="mb-4 text-gray-400" />
-                      <p className="text-lg font-medium mb-2">No data found</p>
-                      <p className="text-sm">Try adjusting your filters or add some accounting entries</p>
+                     <p className="text-lg font-medium mb-2">{t('noDataFound')}</p>
+                     <p className="text-sm">{t('tryAdjustingFilters')}</p>
                     </div>
                   </td>
                 </tr>
@@ -443,7 +445,7 @@ const WorkerSummaryReport: React.FC<WorkerSummaryReportProps> = ({
                       <td key={category} className={`px-6 py-4 whitespace-nowrap text-sm text-center ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                         {worker.categoryTotals[category] 
                           ? `$${worker.categoryTotals[category].toFixed(2)}`
-                          : <span className="text-gray-400">nil</span>
+                          : <span className="text-gray-400">{t('noData')}</span>
                         }
                       </td>
                     ))}

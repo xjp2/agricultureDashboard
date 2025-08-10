@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Plus, Settings, X, Edit, Trash2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
@@ -6,6 +5,7 @@ import { WorkerData } from '../../lib/workersTypes';
 import { AccountingData, AccountingFormData, WorkOption, UomOption } from '../../lib/accountingTypes'; // Import UomOption
 import WorkOptionManager from './WorkOptionManager';
 import UomOptionManager from './UomOptionManager'; // Import UomOptionManager
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface AccountingDataEntryProps {
   workers: WorkerData[];
@@ -26,6 +26,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
   onUomOptionUpdated, // Destructure new prop
   darkMode // Destructure new prop
 }) => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState<AccountingFormData>({
     month: '',
     name: '',
@@ -230,10 +231,10 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className={"text-lg font-semibold " + (darkMode ? 'text-white' : 'text-gray-900')}>
-              {editingEntry ? 'Edit Accounting Entry' : 'Add New Accounting Entry'}
+              {editingEntry ? t('editAccountingEntry') : t('addNewAccountingEntry')}
             </h3>
             <p className={"text-sm " + (darkMode ? 'text-gray-400' : 'text-gray-600')}>
-              {editingEntry ? 'Update the accounting entry details' : 'Enter worker payment and work details'}
+              {editingEntry ? t('updateAccountingEntry') : t('enterWorkerPayment')}
             </p>
           </div>
           {editingEntry && (
@@ -244,7 +245,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
               )}
             >
               <X size={16} className="mr-1" />
-              Cancel Edit
+              {t('cancel')} {t('edit')}
             </button>
           )}
         </div>
@@ -260,7 +261,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
             {/* Month */}
             <div>
               <label className={"block text-sm font-medium mb-1 " + (darkMode ? 'text-gray-300' : 'text-gray-700')}>
-                Month *
+                {t('month')} *
               </label>
               <select
                 name="month"
@@ -273,7 +274,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
                     : 'bg-white border-gray-300 text-gray-900'
                 ) + " focus:outline-none focus:ring-2 focus:ring-green-500"}
               >
-                <option value="">Select month</option>
+                <option value="">{t('selectMonth')}</option>
                 {generateMonthOptions().map(month => (
                   <option key={month} value={month}>{month}</option>
                 ))}
@@ -283,7 +284,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
             {/* Worker Name */}
             <div>
               <label className={"block text-sm font-medium mb-1 " + (darkMode ? 'text-gray-300' : 'text-gray-700')}>
-                Worker Name *
+                {t('workerName')} *
               </label>
               <select
                 name="name"
@@ -299,7 +300,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
                     : 'bg-white border-gray-300 text-gray-900'
                 ) + " focus:outline-none focus:ring-2 focus:ring-green-500"}
               >
-                <option value="">Select worker</option>
+                <option value="">{t('selectWorker')}</option>
                 {workers.map(worker => (
                   <option key={worker.id} value={worker.Name}>
                     {worker.Name} ({worker.EID})
@@ -311,7 +312,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
             {/* Work Type */}
             <div>
               <label className={"block text-sm font-medium mb-1 " + (darkMode ? 'text-gray-300' : 'text-gray-700')}>
-                Work Type *
+                {t('workType')} *
               </label>
               <div className="flex items-end gap-2">
                 <select
@@ -325,7 +326,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
                       : 'bg-white border-gray-300 text-gray-900'
                   ) + " focus:outline-none focus:ring-2 focus:ring-green-500"}
                 >
-                  <option value="">Select work type</option>
+                  <option value="">{t('selectWorkType')}</option>
                   {workOptions.map(option => (
                     <option key={option.id} value={option.work_name}>
                       {option.work_name}
@@ -348,7 +349,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
             {/* Block */}
             <div>
               <label className={"block text-sm font-medium mb-1 " + (darkMode ? 'text-gray-300' : 'text-gray-700')}>
-                Block *
+                {t('block')} *
               </label>
               <input
                 type="text"
@@ -361,14 +362,14 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 ) + " focus:outline-none focus:ring-2 focus:ring-green-500"}
-                placeholder="Enter block identifier"
+                placeholder={t('enterBlockIdentifier')}
               />
             </div>
 
             {/* Quantity */}
             <div>
               <label className={"block text-sm font-medium mb-1 " + (darkMode ? 'text-gray-300' : 'text-gray-700')}>
-                Quantity *
+                {t('quantity')} *
               </label>
               <input
                 type="number"
@@ -383,14 +384,14 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 ) + " focus:outline-none focus:ring-2 focus:ring-green-500"}
-                placeholder="Enter quantity"
+                placeholder={t('enterQuantity')}
               />
             </div>
 
             {/* UOM */}
             <div>
               <label className={"block text-sm font-medium mb-1 " + (darkMode ? 'text-gray-300' : 'text-gray-700')}>
-                Unit of Measure (UOM) *
+                {t('unitOfMeasure')} (UOM) *
               </label>
               <div className="flex items-end gap-2">
                 <select
@@ -405,7 +406,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
                   ) + " focus:outline-none focus:ring-2 focus:ring-green-500"}
                 >
                   {uomOptions.length === 0 ? (
-                    <option value="">No UOMs available</option>
+                    <option value="">{t('noDataFound')}</option>
                   ) : (
                     uomOptions.map(option => (
                       <option key={option.id} value={option.uom_name}>
@@ -420,7 +421,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
                   className={"px-3 py-2 rounded-md text-sm " + (
                     darkMode ? 'bg-blue-900/20 text-blue-400 hover:bg-blue-900/30' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
                   )}
-                  title="Manage UOM options"
+                  title={t('manageUomOptions')}
                 >
                   <Settings size={16} />
                 </button>
@@ -430,7 +431,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
             {/* Price */}
             <div>
               <label className={"block text-sm font-medium mb-1 " + (darkMode ? 'text-gray-300' : 'text-gray-700')}>
-                Price per Unit *
+                {t('pricePerUnit')} *
               </label>
               <input
                 type="number"
@@ -445,14 +446,14 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 ) + " focus:outline-none focus:ring-2 focus:ring-green-500"}
-                placeholder="Enter price per unit"
+                placeholder={t('enterPricePerUnit')}
               />
             </div>
 
             {/* Total (calculated) */}
             <div>
               <label className={"block text-sm font-medium mb-1 " + (darkMode ? 'text-gray-300' : 'text-gray-700')}>
-                Total Amount
+                {t('totalAmount')}
               </label>
               <div className={"w-full px-3 py-2 border rounded-md " + (
                 darkMode 
@@ -475,7 +476,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                 )}
               >
-                Cancel
+                {t('cancel')}
               </button>
             )}
             <button
@@ -488,7 +489,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
               ) : (
                 <Plus size={16} className="mr-2" />
               )}
-              {editingEntry ? 'Update Entry' : 'Add Entry'}
+              {editingEntry ? t('updateEntry') : t('addEntry')}
             </button>
           </div>
         </form>
@@ -497,13 +498,13 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
       {/* Recent Entries */}
       <div className={"p-6 rounded-lg border " + (darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200')}>
         <h3 className={"text-lg font-semibold mb-4 " + (darkMode ? 'text-white' : 'text-gray-900')}>
-          Recent Entries
+          {t('recentEntries')}
         </h3>
         
         {recentEntries.length === 0 ? (
           <div className="text-center py-8">
             <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-              No entries found. Add your first accounting entry above.
+              {t('noDataFound')}. {t('addNewAccountingEntry')}.
             </p>
           </div>
         ) : (
@@ -512,31 +513,31 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
               <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-50'}>
                 <tr>
                   <th className={"px-6 py-3 text-left text-xs font-medium " + (darkMode ? 'text-gray-300' : 'text-gray-500') + " uppercase tracking-wider"}>
-                    Month
+                    {t('month')}
                   </th>
                   <th className={"px-6 py-3 text-left text-xs font-medium " + (darkMode ? 'text-gray-300' : 'text-gray-500') + " uppercase tracking-wider"}>
-                    Worker
+                    {t('workers')}
                   </th>
                   <th className={"px-6 py-3 text-left text-xs font-medium " + (darkMode ? 'text-gray-300' : 'text-gray-500') + " uppercase tracking-wider"}>
-                    Work
+                    {t('workType')}
                   </th>
                   <th className={"px-6 py-3 text-left text-xs font-medium " + (darkMode ? 'text-gray-300' : 'text-gray-500') + " uppercase tracking-wider"}>
-                    Block
+                    {t('block')}
                   </th>
                   <th className={"px-6 py-3 text-center text-xs font-medium " + (darkMode ? 'text-gray-300' : 'text-gray-500') + " uppercase tracking-wider"}>
-                    Quantity
+                    {t('quantity')}
                   </th>
                   <th className={"px-6 py-3 text-center text-xs font-medium " + (darkMode ? 'text-gray-300' : 'text-gray-500') + " uppercase tracking-wider"}>
-                    UOM
+                    {t('uom')}
                   </th>
                   <th className={"px-6 py-3 text-center text-xs font-medium " + (darkMode ? 'text-gray-300' : 'text-gray-500') + " uppercase tracking-wider"}>
-                    Price
+                    {t('price')}
                   </th>
                   <th className={"px-6 py-3 text-center text-xs font-medium " + (darkMode ? 'text-gray-300' : 'text-gray-500') + " uppercase tracking-wider"}>
-                    Total
+                    {t('total')}
                   </th>
                   <th className={"px-6 py-3 text-center text-xs font-medium " + (darkMode ? 'text-gray-300' : 'text-gray-500') + " uppercase tracking-wider"}>
-                    Actions
+                    {t('actions')}
                   </th>
                 </tr>
               </thead>
@@ -577,14 +578,14 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
                         <button
                           onClick={() => handleEdit(entry)}
                           className={"p-1 rounded-full " + (darkMode ? 'hover:bg-gray-600 text-blue-400' : 'hover:bg-gray-100 text-blue-600')}
-                          title="Edit entry"
+                          title={t('editAccountingEntry')}
                         >
                           <Edit size={16} />
                         </button>
                         <button
                           onClick={() => handleDelete(entry.id)}
                           className={"p-1 rounded-full " + (darkMode ? 'hover:bg-gray-600 text-red-400' : 'hover:bg-gray-100 text-red-600')}
-                          title="Delete entry"
+                          title={t('delete') + ' ' + t('entry')}
                         >
                           <Trash2 size={16} />
                         </button>

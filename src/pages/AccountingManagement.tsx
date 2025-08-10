@@ -269,7 +269,7 @@ const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode })
             }`}
           >
             <Plus size={16} className="mr-1" />
-            Entry
+            {t('entry')}
           </button>
           <button
             onClick={() => setCurrentView('worker-summary')}
@@ -280,7 +280,7 @@ const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode })
             }`}
           >
             <Users size={16} className="mr-1" />
-            Workers
+            {t('workers')}
           </button>
           <button
             onClick={() => setCurrentView('department-summary')}
@@ -291,7 +291,7 @@ const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode })
             }`}
           >
             <FileText size={16} className="mr-1" />
-            Departments
+            {t('departments')}
           </button>
           <button
             onClick={() => setCurrentView('department-detail')}
@@ -302,7 +302,7 @@ const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode })
             }`}
           >
             <TrendingUp size={16} className="mr-1" />
-            Details
+            {t('details')}
           </button>
           <button
             onClick={() => setCurrentView('introducer-commission')}
@@ -313,7 +313,7 @@ const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode })
             }`}
           >
             <DollarSign size={16} className="mr-1" />
-            Commission
+            {t('commission')}
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { X, User, Calendar, DollarSign, Briefcase, ArrowUpDown, ArrowUp, ArrowDown, Download } from 'lucide-react';
 import { AccountingData, SortConfig } from '../../lib/accountingTypes';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface WorkerSummary {
   eid: string;
@@ -24,6 +25,7 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
   accountingData,
   darkMode
 }) => {
+  const { t } = useLanguage();
   const [sortConfig, setSortConfig] = useState<SortConfig>({
     key: 'created_at',
     direction: 'desc'
@@ -147,10 +149,10 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
             </div>
             <div>
               <h2 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                {worker.name} - Work History
+                {worker.name} - {t('workHistory')}
               </h2>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Employee ID: {worker.eid} • Complete work and earnings history
+                {t('employeeId')}: {worker.eid} • {t('completeWorkHistory')}
               </p>
             </div>
           </div>
@@ -162,7 +164,7 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
               }`}
             >
               <Download size={16} className="mr-1" />
-              Export
+              {t('export')}
             </button>
             <button
               onClick={onClose}
@@ -178,7 +180,7 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
           <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Entries</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalEntries')}</p>
                 <p className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                   {totalEntries}
                 </p>
@@ -189,7 +191,7 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
           <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Earnings</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalEarnings')}</p>
                 <p className={`text-xl font-bold ${darkMode ? 'text-green-400' : 'text-green-600'}`}>
                   ${totalEarnings.toFixed(2)}
                 </p>
@@ -200,7 +202,7 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
           <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Average per Entry</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('averagePerEntry')}</p>
                 <p className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                   ${averagePerEntry.toFixed(2)}
                 </p>
@@ -211,7 +213,7 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
           <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Categories</p>
+                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('categories')}</p>
                 <p className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                   {Object.keys(worker.categoryTotals).length}
                 </p>
@@ -224,7 +226,7 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
         {/* Category Breakdown */}
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'} mb-6`}>
           <h3 className={`text-sm font-medium mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Earnings by Category
+            {t('earningsByCategory')}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {Object.entries(worker.categoryTotals).map(([category, amount]) => (
@@ -248,7 +250,7 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Filter by Month
+                {t('filterByMonth')}
               </label>
               <select
                 value={filterMonth}
@@ -259,7 +261,7 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               >
-                <option value="">All Months</option>
+                <option value="">{t('allMonths')}</option>
                 {generateMonthOptions().map(month => (
                   <option key={month} value={month}>{month}</option>
                 ))}
@@ -267,7 +269,7 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
             </div>
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Filter by Work Type
+                {t('filterByWorkType')}
               </label>
               <select
                 value={filterWork}
@@ -278,7 +280,7 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               >
-                <option value="">All Work Types</option>
+                <option value="">{t('allWorkTypes')}</option>
                 {uniqueWorkTypes.map(work => (
                   <option key={work} value={work}>{work}</option>
                 ))}
@@ -294,14 +296,14 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
               <thead className={darkMode ? 'bg-gray-600' : 'bg-gray-50'}>
                 <tr>
                   {[
-                    { key: 'month', label: 'Month' },
-                    { key: 'work', label: 'Work Type' },
-                    { key: 'block', label: 'Block' },
-                    { key: 'quantity', label: 'Quantity' },
-                    { key: 'uom', label: 'UOM' },
-                    { key: 'price', label: 'Price' },
-                    { key: 'total', label: 'Total' },
-                    { key: 'created_at', label: 'Date Created' }
+                    { key: 'month', label: t('month') },
+                    { key: 'work', label: t('workType') },
+                    { key: 'block', label: t('block') },
+                    { key: 'quantity', label: t('quantity') },
+                    { key: 'uom', label: t('uom') },
+                    { key: 'price', label: t('price') },
+                    { key: 'total', label: t('total') },
+                    { key: 'created_at', label: t('dateCreated') }
                   ].map(({ key, label }) => (
                     <th
                       key={key}
@@ -322,8 +324,8 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
                     <td colSpan={8} className={`px-6 py-12 text-center ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                       <div className="flex flex-col items-center">
                         <Briefcase size={48} className="mb-4 text-gray-400" />
-                        <p className="text-lg font-medium mb-2">No work history found</p>
-                        <p className="text-sm">Try adjusting your filters</p>
+                        <p className="text-lg font-medium mb-2">{t('noWorkHistoryFound')}</p>
+                        <p className="text-sm">{t('tryAdjustingFilters')}</p>
                       </div>
                     </td>
                   </tr>
@@ -369,15 +371,15 @@ const WorkerDetailModal: React.FC<WorkerDetailModalProps> = ({
           <div className="flex justify-between items-center">
             <div>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Showing {processedData.length} of {accountingData.length} total entries
+                {t('showing')} {processedData.length} {t('of')} {accountingData.length} {t('totalEntries')}
               </p>
             </div>
             <div className="text-right">
               <p className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                Filtered Total: ${totalEarnings.toFixed(2)}
+                {t('filteredTotal')}: ${totalEarnings.toFixed(2)}
               </p>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Average: ${averagePerEntry.toFixed(2)} per entry
+                {t('average')}: ${averagePerEntry.toFixed(2)} {t('perEntry')}
               </p>
             </div>
           </div>
