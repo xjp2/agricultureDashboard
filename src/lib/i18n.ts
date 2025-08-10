@@ -440,6 +440,21 @@ export const translations: Translations = {
     hoursAgo: 'hours ago',
     yesterday: 'Yesterday',
     processing: 'Processing',
+    
+    // Dashboard specific
+    loadingDashboard: 'Loading dashboard...',
+    rainfallSummary: 'Rainfall Summary',
+    fertilizerSummary: 'Fertilizer Summary',
+    yearlyTotal: 'Yearly Total',
+    averageDaily: 'Average Daily',
+    totalUsed: 'Total Used',
+    status: 'Status',
+    inactive: 'Inactive',
+    setupProgram: 'Setup Program',
+    averagePerRecord: 'Average per Record',
+    noRecentActivity: 'No Recent Activity',
+    startUsingSystemToSeeActivity: 'Start using the system to see recent activity here',
+    systemHasData: 'System contains {phases} phases, {workers} workers, and {records} accounting records',
   },
   ms: {
     // General
@@ -899,6 +914,21 @@ export const translations: Translations = {
     hoursAgo: 'jam yang lalu',
     yesterday: 'Semalam',
     processing: 'Memproses',
+    
+    // Dashboard specific
+    loadingDashboard: 'Memuatkan papan pemuka...',
+    rainfallSummary: 'Ringkasan Hujan',
+    fertilizerSummary: 'Ringkasan Baja',
+    yearlyTotal: 'Jumlah Tahunan',
+    averageDaily: 'Purata Harian',
+    totalUsed: 'Jumlah Digunakan',
+    status: 'Status',
+    inactive: 'Tidak Aktif',
+    setupProgram: 'Sediakan Program',
+    averagePerRecord: 'Purata setiap Rekod',
+    noRecentActivity: 'Tiada Aktiviti Terkini',
+    startUsingSystemToSeeActivity: 'Mula gunakan sistem untuk melihat aktiviti terkini di sini',
+    systemHasData: 'Sistem mengandungi {phases} fasa, {workers} pekerja, dan {records} rekod perakaunan',
   },
   zh: {
     // General
@@ -1359,6 +1389,21 @@ export const translations: Translations = {
     hoursAgo: '小时前',
     yesterday: '昨天',
     processing: '处理中',
+    
+    // Dashboard specific
+    loadingDashboard: '加载仪表板...',
+    rainfallSummary: '降雨摘要',
+    fertilizerSummary: '肥料摘要',
+    yearlyTotal: '年度总计',
+    averageDaily: '日平均',
+    totalUsed: '总使用量',
+    status: '状态',
+    inactive: '非活跃',
+    setupProgram: '设置程序',
+    averagePerRecord: '每记录平均',
+    noRecentActivity: '无最近活动',
+    startUsingSystemToSeeActivity: '开始使用系统以查看最近活动',
+    systemHasData: '系统包含 {phases} 个阶段，{workers} 个工人，和 {records} 条会计记录',
   },
 };
 

@@ -1,15 +1,230 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Map, Users, Package, BarChart4, Sprout, Cloud, AlertTriangle, MapPin, CloudRain, Leaf, Calculator, Plus, TrendingUp, Calendar, Activity } from 'lucide-react';
 import StatCard from '../components/StatCard';
 import WeatherCard from '../components/WeatherCard';
+import { supabase } from '../lib/supabase';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface DashboardHomeProps {
   darkMode: boolean;
 }
 
+interface DashboardStats {
+  phases: number;
+  blocks: number;
+  tasks: number;
+  totalArea: number;
+  totalTrees: number;
+  rainfallLocations: number;
+  yearlyRainfall: number;
+  rainyDays: number;
+  totalWorkers: number;
+  departments: number;
+  companies: number;
+  newHiresThisMonth: number;
+  totalEarnings: number;
+  totalRecords: number;
+  currentMonthEarnings: number;
+  activePrograms: number;
+  monthlyApplications: number;
+  totalFertilizerUsed: number;
+}
+
 const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
   const { t } = useLanguage();
+  const [stats, setStats] = useState<DashboardStats>({
+    phases: 0,
+    blocks: 0,
+    tasks: 0,
+    totalArea: 0,
+    totalTrees: 0,
+    rainfallLocations: 0,
+    yearlyRainfall: 0,
+    rainyDays: 0,
+    totalWorkers: 0,
+    departments: 0,
+    companies: 0,
+    newHiresThisMonth: 0,
+    totalEarnings: 0,
+    totalRecords: 0,
+    currentMonthEarnings: 0,
+    activePrograms: 0,
+    monthlyApplications: 0,
+    totalFertilizerUsed: 0
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchDashboardStats();
+  }, []);
+
+  const fetchDashboardStats = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch phases data
+      const { data: phasesData, error: phasesError } = await supabase
+        .from('PhaseData')
+        .select('*');
+
+      if (phasesError) throw phasesError;
+
+      // Fetch blocks data
+      const { data: blocksData, error: blocksError } = await supabase
+        .from('BlockData')
+        .select('*');
+
+      if (blocksError) throw blocksError;
+
+      // Fetch tasks data
+      const { data: tasksData, error: tasksError } = await supabase
+        .from('TaskData')
+        .select('*');
+
+      if (tasksError) throw tasksError;
+
+      // Fetch rainfall locations
+      const { data: locationsData, error: locationsError } = await supabase
+        .from('rainfallLocations')
+        .select('*');
+
+      if (locationsError) throw locationsError;
+
+      // Fetch rainfall data for current year
+      const currentYear = new Date().getFullYear();
+      const { data: rainfallData, error: rainfallError } = await supabase
+        .from('rainfallData')
+        .select('*')
+        .gte('date', `${currentYear}-01-01`)
+        .lte('date', `${currentYear}-12-31`);
+
+      if (rainfallError) throw rainfallError;
+
+      // Fetch workers data
+      const { data: workersData, error: workersError } = await supabase
+        .from('workersData')
+        .select('*');
+
+      if (workersError) throw workersError;
+
+      // Fetch accounting data
+      const { data: accountingData, error: accountingError } = await supabase
+        .from('accountingData')
+        .select('*');
+
+      if (accountingError) throw accountingError;
+
+      // Fetch fertilizer data
+      const { data: yearFertilizerData, error: yearFertilizerError } = await supabase
+        .from('yearFertilizerData')
+        .select('*');
+
+      if (yearFertilizerError) throw yearFertilizerError;
+
+      const { data: monthFertilizerData, error: monthFertilizerError } = await supabase
+        .from('monthFertilizerData')
+        .select('*');
+
+      if (monthFertilizerError) throw monthFertilizerError;
+
+      // Fetch phase start dates to count active programs
+      const { data: phaseStartDates, error: phaseStartError } = await supabase
+        .from('phaseStartDateData')
+        .select('*');
+
+      if (phaseStartError) throw phaseStartError;
+
+      // Calculate statistics
+      const totalArea = phasesData?.reduce((sum, phase) => sum + (phase.Area || 0), 0) || 0;
+      const totalTrees = phasesData?.reduce((sum, phase) => sum + (phase.Trees || 0), 0) || 0;
+      const yearlyRainfall = rainfallData?.reduce((sum, entry) => sum + entry.rainfall, 0) || 0;
+      const rainyDays = rainfallData?.filter(entry => entry.rainfall > 0).length || 0;
+      
+      // Calculate unique departments and companies
+      const departments = new Set(workersData?.map(w => w.Department) || []).size;
+      const companies = new Set(workersData?.map(w => w.Company) || []).size;
+      
+      // Calculate new hires this month
+      const currentMonth = new Date().getMonth();
+      const currentYearForHires = new Date().getFullYear();
+      const newHiresThisMonth = workersData?.filter(worker => {
+        const joinDate = new Date(worker.Date_Joined);
+        return joinDate.getMonth() === currentMonth && joinDate.getFullYear() === currentYearForHires;
+      }).length || 0;
+
+      // Calculate accounting statistics
+      const totalEarnings = accountingData?.reduce((sum, entry) => sum + entry.total, 0) || 0;
+      const currentMonthName = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      const currentMonthEarnings = accountingData?.filter(entry => entry.month === currentMonthName)
+        .reduce((sum, entry) => sum + entry.total, 0) || 0;
+
+      // Calculate fertilizer statistics
+      const currentMonthFertilizer = monthFertilizerData?.filter(entry => {
+        const entryDate = new Date(entry.date);
+        return entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYearForHires;
+      }) || [];
+
+      const totalYearlyFertilizer = yearFertilizerData?.reduce((sum, entry) => sum + entry.kilogram_amount, 0) || 0;
+      const totalMonthlyFertilizer = monthFertilizerData?.reduce((sum, entry) => sum + (entry.bag * entry.quantity), 0) || 0;
+
+      setStats({
+        phases: phasesData?.length || 0,
+        blocks: blocksData?.length || 0,
+        tasks: tasksData?.length || 0,
+        totalArea,
+        totalTrees,
+        rainfallLocations: locationsData?.length || 0,
+        yearlyRainfall,
+        rainyDays,
+        totalWorkers: workersData?.length || 0,
+        departments,
+        companies,
+        newHiresThisMonth,
+        totalEarnings,
+        totalRecords: accountingData?.length || 0,
+        currentMonthEarnings,
+        activePrograms: phaseStartDates?.length || 0,
+        monthlyApplications: currentMonthFertilizer.length,
+        totalFertilizerUsed: totalYearlyFertilizer + totalMonthlyFertilizer
+      });
+    } catch (err) {
+      console.error('Error fetching dashboard stats:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch dashboard data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
+          <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
+            {t('loadingDashboard')}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">{t('error')}: {error}</p>
+          <button 
+            onClick={fetchDashboardStats}
+            className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+          >
+            {t('tryAgain')}
+          </button>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="space-y-6">
@@ -20,23 +235,23 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard 
             title={t('totalPhases')} 
-            value="5" 
+            value={stats.phases.toString()} 
             icon={<Map size={20} />} 
-            trend={5} 
+            trend={0} 
             color="blue"
             darkMode={darkMode}
           />
           <StatCard 
-            title={t('fieldHealth')} 
-            value="87%" 
+            title={t('totalArea')} 
+            value={`${stats.totalArea.toFixed(1)} ${t('acres')}`} 
             icon={<Sprout size={20} />} 
-            trend={-2} 
+            trend={0} 
             color="green"
             darkMode={darkMode}
           />
           <StatCard 
-            title={t('workersOnDuty')} 
-            value="18" 
+            title={t('totalWorkers')} 
+            value={stats.totalWorkers.toString()} 
             icon={<Users size={20} />} 
             trend={0} 
             color="purple"
@@ -44,9 +259,9 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
           />
           <StatCard 
             title={t('monthlyPayroll')} 
-            value="$12,450" 
+            value={`$${stats.currentMonthEarnings.toFixed(2)}`} 
             icon={<Calculator size={20} />} 
-            trend={-4} 
+            trend={0} 
             color="yellow"
             darkMode={darkMode}
           />
@@ -74,19 +289,19 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
             <div className="space-y-3">
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalPhases')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>5</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.phases}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalBlocks')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>23</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.blocks}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('activeTasks')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>47</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.tasks}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalArea')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>1,250 {t('acres')}</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.totalArea.toFixed(1)} {t('acres')}</span>
               </div>
             </div>
             <button className={`w-full mt-4 px-3 py-2 text-sm rounded-md ${darkMode ? 'bg-green-900/20 text-green-400 hover:bg-green-900/30' : 'bg-green-100 text-green-800 hover:bg-green-200'}`}>
@@ -110,19 +325,21 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
             <div className="space-y-3">
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('trackingLocations')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>8</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.rainfallLocations}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('yearlyRainfall')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>1,245 {t('mm')}</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.yearlyRainfall.toFixed(1)} {t('mm')}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('rainyDays')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>89</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.rainyDays}</span>
               </div>
               <div className="flex justify-between">
-                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('lastRecorded')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{t('today')}</span>
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('averageDaily')}:</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  {stats.rainyDays > 0 ? (stats.yearlyRainfall / stats.rainyDays).toFixed(1) : '0.0'} {t('mm')}
+                </span>
               </div>
             </div>
             <button className={`w-full mt-4 px-3 py-2 text-sm rounded-md ${darkMode ? 'bg-blue-900/20 text-blue-400 hover:bg-blue-900/30' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'}`}>
@@ -146,19 +363,21 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
             <div className="space-y-3">
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('activePrograms')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>3</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.activePrograms}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('monthlyApplications')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>156</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.monthlyApplications}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalFertilizerUsed')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>2,340 {t('kg')}</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.totalFertilizerUsed.toFixed(1)} {t('kg')}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('programStatus')}:</span>
-                <span className={`text-sm font-medium text-green-500`}>{t('active')}</span>
+                <span className={`text-sm font-medium ${stats.activePrograms > 0 ? 'text-green-500' : 'text-gray-500'}`}>
+                  {stats.activePrograms > 0 ? t('active') : t('inactive')}
+                </span>
               </div>
             </div>
             <button className={`w-full mt-4 px-3 py-2 text-sm rounded-md ${darkMode ? 'bg-green-900/20 text-green-400 hover:bg-green-900/30' : 'bg-green-100 text-green-800 hover:bg-green-200'}`}>
@@ -182,19 +401,19 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
             <div className="space-y-3">
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalWorkers')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>45</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.totalWorkers}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('departments')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>8</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.departments}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('companies')}:</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.companies}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('newHires')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>3 {t('thisMonth')}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('attendanceRate')}:</span>
-                <span className={`text-sm font-medium text-green-500`}>94%</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.newHiresThisMonth} {t('thisMonth')}</span>
               </div>
             </div>
             <button className={`w-full mt-4 px-3 py-2 text-sm rounded-md ${darkMode ? 'bg-purple-900/20 text-purple-400 hover:bg-purple-900/30' : 'bg-purple-100 text-purple-800 hover:bg-purple-200'}`}>
@@ -217,25 +436,103 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
             </div>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('monthlyPayroll')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>$12,450</span>
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalEarnings')}:</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>${stats.totalEarnings.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalRecords')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>234</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.totalRecords}</span>
               </div>
               <div className="flex justify-between">
-                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('pendingEntries')}:</span>
-                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>7</span>
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('thisMonth')}:</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>${stats.currentMonthEarnings.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('commissionsDue')}:</span>
-                <span className={`text-sm font-medium text-green-500`}>$622.50</span>
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('averagePerRecord')}:</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  ${stats.totalRecords > 0 ? (stats.totalEarnings / stats.totalRecords).toFixed(2) : '0.00'}
+                </span>
               </div>
             </div>
             <button className={`w-full mt-4 px-3 py-2 text-sm rounded-md ${darkMode ? 'bg-yellow-900/20 text-yellow-400 hover:bg-yellow-900/30' : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'}`}>
               <Calculator size={16} className="inline mr-1" />
               {t('addPayrollEntry')}
+            </button>
+          </div>
+
+          {/* Rainfall Summary */}
+          <div className={`border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 shadow-sm`}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-700'}`}>
+                  <CloudRain size={20} />
+                </div>
+                <h3 className={`ml-3 font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  {t('rainfallSummary')}
+                </h3>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('trackingLocations')}:</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.rainfallLocations}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('yearlyTotal')}:</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.yearlyRainfall.toFixed(1)} {t('mm')}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('rainyDays')}:</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.rainyDays}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('averageDaily')}:</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  {stats.rainyDays > 0 ? (stats.yearlyRainfall / stats.rainyDays).toFixed(1) : '0.0'} {t('mm')}
+                </span>
+              </div>
+            </div>
+            <button className={`w-full mt-4 px-3 py-2 text-sm rounded-md ${darkMode ? 'bg-blue-900/20 text-blue-400 hover:bg-blue-900/30' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'}`}>
+              <Plus size={16} className="inline mr-1" />
+              {t('addLocation')}
+            </button>
+          </div>
+
+          {/* Fertilizer Summary */}
+          <div className={`border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl p-6 shadow-sm`}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-50 text-green-700'}`}>
+                  <Leaf size={20} />
+                </div>
+                <h3 className={`ml-3 font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                  {t('fertilizerSummary')}
+                </h3>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('activePrograms')}:</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.activePrograms}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('monthlyApplications')}:</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.monthlyApplications}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalUsed')}:</span>
+                <span className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stats.totalFertilizerUsed.toFixed(1)} {t('kg')}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('status')}:</span>
+                <span className={`text-sm font-medium ${stats.activePrograms > 0 ? 'text-green-500' : 'text-gray-500'}`}>
+                  {stats.activePrograms > 0 ? t('active') : t('inactive')}
+                </span>
+              </div>
+            </div>
+            <button className={`w-full mt-4 px-3 py-2 text-sm rounded-md ${darkMode ? 'bg-green-900/20 text-green-400 hover:bg-green-900/30' : 'bg-green-100 text-green-800 hover:bg-green-200'}`}>
+              <Leaf size={16} className="inline mr-1" />
+              {t('setupProgram')}
             </button>
           </div>
         </div>
@@ -266,104 +563,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-              {t('weatherConditions')}
-            </h2>
-            <button className={`text-sm px-3 py-1 rounded-md ${darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}`}>
-              {t('viewForecast')}
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <WeatherCard 
-              location="North Fields"
-              date="Today, May 10"
-              temperature={24}
-              condition="sunny"
-              humidity={45}
-              windSpeed={8}
-              precipitation={0}
-              darkMode={darkMode}
-            />
-            <WeatherCard 
-              location="South Fields"
-              date="Today, May 10"
-              temperature={22}
-              condition="cloudy"
-              humidity={60}
-              windSpeed={12}
-              precipitation={5}
-              darkMode={darkMode}
-            />
-          </div>
-        </div>
-
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-              {t('alerts')}
-            </h2>
-            <span className={`text-xs px-2 py-1 rounded-full ${darkMode ? 'bg-red-900/20 text-red-400' : 'bg-red-100 text-red-800'}`}>
-              4 New
-            </span>
-          </div>
-          <div className={`space-y-3 rounded-xl border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-4 shadow-sm`}>
-            <div className={`flex items-start p-3 rounded-md ${darkMode ? 'bg-red-900/10' : 'bg-red-50'} border ${darkMode ? 'border-red-900/20' : 'border-red-100'}`}>
-              <AlertTriangle size={20} className="text-red-500 mr-3 mt-0.5" />
-              <div>
-                <h4 className={`font-medium text-sm ${darkMode ? 'text-red-400' : 'text-red-800'}`}>
-                  {t('lowInventoryAlert')}
-                </h4>
-                <p className={`text-xs mt-1 ${darkMode ? 'text-red-300/70' : 'text-red-700/70'}`}>
-                  {t('fertilizerStockLow')}
-                </p>
-                <div className="mt-2">
-                  <button className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-red-900/30 text-red-400 hover:bg-red-900/40' : 'bg-red-100 text-red-800 hover:bg-red-200'}`}>
-                    {t('orderMore')}
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            <div className={`flex items-start p-3 rounded-md ${darkMode ? 'bg-yellow-900/10' : 'bg-yellow-50'} border ${darkMode ? 'border-yellow-900/20' : 'border-yellow-100'}`}>
-              <AlertTriangle size={20} className="text-yellow-500 mr-3 mt-0.5" />
-              <div>
-                <h4 className={`font-medium text-sm ${darkMode ? 'text-yellow-400' : 'text-yellow-800'}`}>
-                  {t('payrollPending')}
-                </h4>
-                <p className={`text-xs mt-1 ${darkMode ? 'text-yellow-300/70' : 'text-yellow-700/70'}`}>
-                  {t('payrollEntriesPending')}
-                </p>
-                <div className="mt-2">
-                  <button className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-yellow-900/30 text-yellow-400 hover:bg-yellow-900/40' : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'}`}>
-                    {t('reviewEntries')}
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            <div className={`flex items-start p-3 rounded-md ${darkMode ? 'bg-blue-900/10' : 'bg-blue-50'} border ${darkMode ? 'border-blue-900/20' : 'border-blue-100'}`}>
-              <AlertTriangle size={20} className="text-blue-500 mr-3 mt-0.5" />
-              <div>
-                <h4 className={`font-medium text-sm ${darkMode ? 'text-blue-400' : 'text-blue-800'}`}>
-                  {t('weatherAlert')}
-                </h4>
-                <p className={`text-xs mt-1 ${darkMode ? 'text-blue-300/70' : 'text-blue-700/70'}`}>
-                  {t('heavyRainExpected')}
-                </p>
-                <div className="mt-2">
-                  <button className={`text-xs px-2 py-1 rounded ${darkMode ? 'bg-blue-900/30 text-blue-400 hover:bg-blue-900/40' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'}`}>
-                    {t('viewForecast')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      {/* Recent Activity */}
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
@@ -374,105 +574,27 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
           </button>
         </div>
         <div className={`rounded-xl border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} overflow-hidden shadow-sm`}>
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-50'}>
-              <tr>
-                <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                  {t('activity')}
-                </th>
-                <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                  {t('performedBy')}
-                </th>
-                <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                  {t('location')}
-                </th>
-                <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                  {t('time')}
-                </th>
-                <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                  {t('status')}
-                </th>
-              </tr>
-            </thead>
-            <tbody className={`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
-              <tr>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                  {t('fertilizerApplication')}
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  John Smith
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {t('phaseDetails')} A2
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  1 {t('hourAgo')}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-100 text-green-800'}`}>
-                    {t('completed')}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                  {t('payrollEntry')}
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  Sarah Johnson
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {t('accounting')}
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  2 {t('hoursAgo')}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-100 text-blue-800'}`}>
-                    {t('processing')}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                  {t('rainfallRecording')}
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  Mike Davis
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {t('rainfall')}
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {t('yesterday')}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-100 text-green-800'}`}>
-                    {t('completed')}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                  {t('workerRegistration')}
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  Admin User
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {t('workers')}
-                </td>
-                <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {t('yesterday')}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-yellow-900/20 text-yellow-400' : 'bg-yellow-100 text-yellow-800'}`}>
-                    {t('inProgress')}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          {stats.totalRecords === 0 ? (
+            <div className="p-12 text-center">
+              <Activity size={48} className="mx-auto mb-4 text-gray-400" />
+              <h3 className={`text-lg font-medium mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                {t('noRecentActivity')}
+              </h3>
+              <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                {t('startUsingSystemToSeeActivity')}
+              </p>
+            </div>
+          ) : (
+            <div className="p-6">
+              <p className={`text-center ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                {t('systemHasData', { 
+                  phases: stats.phases.toString(),
+                  workers: stats.totalWorkers.toString(),
+                  records: stats.totalRecords.toString()
+                })}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
