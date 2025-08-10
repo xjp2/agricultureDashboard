@@ -527,7 +527,6 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
         <div className="space-y-6">
           <MonthlyRainfallCards
             monthlyTotals={monthlyTotals}
-            unit={unit}
             onMonthClick={handleMonthCardClick}
             darkMode={darkMode}
           />
@@ -564,7 +563,6 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
             month={currentMonth}
             rainfallData={rainfallData}
             locationId={selectedLocation?.id || 0}
-            unit={unit}
             onDataUpdate={fetchRainfallData}
             darkMode={darkMode}
           />
