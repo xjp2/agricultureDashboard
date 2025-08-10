@@ -10,6 +10,7 @@ import StatCard from '../components/StatCard';
 import MapboxMap from '../components/MapBoxMap';
 import { supabase, PhaseData, BlockData, TaskData } from '../lib/supabase';
 import { createBlockWithHierarchyUpdate } from '../lib/hierarchicalData';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface PhaseWithBlocks extends PhaseData {
   blockCount: number;
@@ -20,6 +21,7 @@ interface FieldVisualizationProps {
 }
 
 const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => {
+  const { t } = useLanguage();
   const [phases, setPhases] = useState<PhaseWithBlocks[]>([]);
   const [blocks, setBlocks] = useState<BlockData[]>([]);
   const [tasks, setTasks] = useState<TaskData[]>([]);
@@ -247,7 +249,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
-          <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>Loading field data...</p>
+          <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('loading')}</p>
         </div>
       </div>
     );
@@ -257,7 +259,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <p className="text-red-500 mb-4">Error loading data: {error}</p>
+          <p className="text-red-500 mb-4">{t('errorOccurred')}: {error}</p>
           <button 
             onClick={() => {
               if (viewMode === 'phases') fetchPhaseData();
@@ -266,7 +268,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
             }}
             className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
           >
-            Retry
+            {t('tryAgain')}
           </button>
         </div>
       </div>
@@ -274,21 +276,21 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
   }
 
   const getTitle = () => {
-    if (viewMode === 'phases') return 'Field Visualization';
-    if (viewMode === 'blocks') return `Phase ${selectedPhase} - Block Details`;
-    return `Block ${selectedBlock} - Task Details`;
+    if (viewMode === 'phases') return t('fields');
+    if (viewMode === 'blocks') return `${t('phaseDetails')} ${selectedPhase} - ${t('block')} ${t('details')}`;
+    return `${t('block')} ${selectedBlock} - ${t('details')}`;
   };
 
   const getSubtitle = () => {
-    if (viewMode === 'phases') return 'Monitor and manage your fields and crops';
-    if (viewMode === 'blocks') return `Detailed view of blocks in Phase ${selectedPhase}`;
-    return `Detailed view of tasks in Block ${selectedBlock}`;
+    if (viewMode === 'phases') return t('monitorAndManageFields');
+    if (viewMode === 'blocks') return `${t('details')} view of ${t('block')}s in ${t('phaseDetails')} ${selectedPhase}`;
+    return `${t('details')} view of tasks in ${t('block')} ${selectedBlock}`;
   };
 
   const getCreateButtonText = () => {
-    if (viewMode === 'phases') return 'Add Field';
-    if (viewMode === 'blocks') return 'Add Block';
-    return 'Add Task';
+    if (viewMode === 'phases') return t('add') + ' Field';
+    if (viewMode === 'blocks') return t('add') + ' ' + t('block');
+    return t('add') + ' Task';
   };
 
   const handleCreateClick = () => {
@@ -341,7 +343,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <StatCard
-          title="Total Area"
+          title={t('totalArea')}
           value={`${totalArea.toFixed(1)} acre`}
           icon={<Map size={20} />}
           trend={0}
@@ -349,7 +351,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
           darkMode={darkMode}
         />
         <StatCard
-          title="Total Trees"
+          title={t('totalTrees')}
           value={totalTrees.toString()}
           icon={<MapPin size={20} />}
           trend={0}
@@ -379,11 +381,11 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
           <div className="flex gap-2">
             <button className={`px-3 py-2 rounded-md text-sm flex items-center ${darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}`}>
               <Filter size={16} className="mr-2" />
-              Filter
+              {t('filters')}
             </button>
             <button className={`px-3 py-2 rounded-md text-sm flex items-center ${darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}`}>
               <Download size={16} className="mr-2" />
-              Export
+              {t('export')}
             </button>
           </div>
         </div>
@@ -399,7 +401,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
         
         <div className="flex justify-between items-center mb-2">
           <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-            {viewMode === 'phases' ? 'Phase Details' : viewMode === 'blocks' ? `Phase ${selectedPhase} - Blocks` : `Block ${selectedBlock} - Tasks`}
+            {viewMode === 'phases' ? t('phaseDetails') : viewMode === 'blocks' ? `${t('phaseDetails')} ${selectedPhase} - ${t('block')}s` : `${t('block')} ${selectedBlock} - Tasks`}
           </h3>
           <div className="flex items-center gap-2">
             {viewMode === 'phases' ? (
@@ -408,7 +410,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
                 className={`flex items-center px-3 py-2 rounded-md text-sm ${darkMode ? 'bg-green-900/20 text-green-400 hover:bg-green-900/30' : 'bg-green-100 text-green-800 hover:bg-green-200'}`}
               >
                 <Plus size={16} className="mr-2" />
-                Create New Phase
+                {t('createPhase')}
               </button>
             ) : viewMode === 'blocks' ? (
               <>
@@ -417,13 +419,13 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
                   className={`flex items-center px-3 py-2 rounded-md text-sm ${darkMode ? 'bg-blue-900/20 text-blue-400 hover:bg-blue-900/30' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'}`}
                 >
                   <Plus size={16} className="mr-2" />
-                  Create New Block
+                  {t('createBlock')}
                 </button>
                 <select className={`text-sm rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-700'} py-1 px-2`}>
-                  <option>Sort by Block</option>
+                  <option>Sort by {t('block')}</option>
                   <option>Sort by Area</option>
-                  <option>Sort by Trees</option>
-                  <option>Sort by Date Planted</option>
+                  <option>Sort by {t('trees')}</option>
+                  <option>Sort by {t('date')} Planted</option>
                 </select>
               </>
             ) : (
@@ -433,13 +435,13 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
                   className={`flex items-center px-3 py-2 rounded-md text-sm ${darkMode ? 'bg-purple-900/20 text-purple-400 hover:bg-purple-900/30' : 'bg-purple-100 text-purple-800 hover:bg-purple-200'}`}
                 >
                   <Plus size={16} className="mr-2" />
-                  Create New Task
+                  {t('createTask')}
                 </button>
                 <select className={`text-sm rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-700'} py-1 px-2`}>
                   <option>Sort by Task</option>
                   <option>Sort by Area</option>
-                  <option>Sort by Trees</option>
-                  <option>Sort by Density</option>
+                  <option>Sort by {t('trees')}</option>
+                  <option>Sort by {t('density')}</option>
                 </select>
               </>
             )}
@@ -468,7 +470,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
           ) : (
             <div className="col-span-full text-center py-8">
               <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                No phase data available. Click "Create New Phase" to add your first phase.
+                {t('noPhaseData')}
               </p>
             </div>
           )}
@@ -478,7 +480,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
           {blocksLoading ? (
             <div className="col-span-full text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto mb-4"></div>
-              <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>Loading block data...</p>
+              <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('loading')}</p>
             </div>
           ) : blocks.length > 0 ? (
             blocks.map(block => (
@@ -501,7 +503,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
           ) : (
             <div className="col-span-full text-center py-8">
               <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                No blocks found for Phase {selectedPhase}. Click "Create New Block" to add your first block.
+                {t('noBlocksFound', { phase: selectedPhase })}
               </p>
             </div>
           )}
@@ -511,7 +513,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
           {tasksLoading ? (
             <div className="col-span-full text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto mb-4"></div>
-              <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>Loading task data...</p>
+              <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('loading')}</p>
             </div>
           ) : tasks.length > 0 ? (
             tasks.map(task => (
@@ -530,7 +532,7 @@ const FieldVisualization: React.FC<FieldVisualizationProps> = ({ darkMode }) => 
           ) : (
             <div className="col-span-full text-center py-8">
               <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                No tasks found for Block {selectedBlock}. Click "Create New Task" to add your first task.
+                {t('noTasksFound', { block: selectedBlock })}
               </p>
             </div>
           )}
