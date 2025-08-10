@@ -14,7 +14,6 @@ interface RainfallCalendarProps {
   month: number;
   rainfallData: RainfallData[];
   locationId: number;
-  unit: 'mm' | 'inches';
   onDataUpdate: () => void;
   darkMode: boolean;
 }
@@ -24,7 +23,6 @@ const RainfallCalendar: React.FC<RainfallCalendarProps> = ({
   month,
   rainfallData,
   locationId,
-  unit,
   onDataUpdate,
   darkMode
 }) => {
@@ -190,7 +188,7 @@ const RainfallCalendar: React.FC<RainfallCalendarProps> = ({
                   ? 'bg-gray-700 border-gray-600 text-white' 
                   : 'bg-white border-gray-300 text-gray-900'
               } focus:outline-none focus:ring-1 focus:ring-blue-500`}
-              placeholder={`0 ${unit}`}
+              placeholder="0 mm"
               autoFocus
               disabled={saving}
             />
@@ -199,7 +197,7 @@ const RainfallCalendar: React.FC<RainfallCalendarProps> = ({
               <div className={`text-xs font-medium ${
                 darkMode ? 'text-green-400' : 'text-green-700'
               }`}>
-                {rainfallEntry.rainfall.toFixed(1)} {unit}
+                {rainfallEntry.rainfall.toFixed(1)} mm
               </div>
             </div>
           ) : (

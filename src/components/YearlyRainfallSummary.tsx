@@ -4,7 +4,6 @@ import { ChevronLeft, ChevronRight, CloudRain, TrendingUp } from 'lucide-react';
 interface YearlyRainfallSummaryProps {
   year: number;
   total: number;
-  unit: 'mm' | 'inches';
   onYearChange: (direction: 'prev' | 'next') => void;
   darkMode: boolean;
 }
@@ -12,12 +11,11 @@ interface YearlyRainfallSummaryProps {
 const YearlyRainfallSummary: React.FC<YearlyRainfallSummaryProps> = ({
   year,
   total,
-  unit,
   onYearChange,
   darkMode
 }) => {
   const formatRainfall = (value: number): string => {
-    return `${value.toFixed(1)} ${unit}`;
+    return `${value.toFixed(1)} mm`;
   };
 
   const currentYear = new Date().getFullYear();

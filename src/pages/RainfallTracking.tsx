@@ -489,7 +489,7 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
           darkMode={darkMode}
         />
         <StatCard
-          title={t('averagePerRainyDay')}
+          title={t('averagePerDayOfYear')}
           value={formatRainfall(getAverageRainfall())}
           icon={<TrendingUp size={20} />}
           trend={0}

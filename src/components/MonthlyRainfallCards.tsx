@@ -10,19 +10,17 @@ interface MonthlyTotal {
 
 interface MonthlyRainfallCardsProps {
   monthlyTotals: MonthlyTotal[];
-  unit: 'mm' | 'inches';
   onMonthClick: (month: number) => void;
   darkMode: boolean;
 }
 
 const MonthlyRainfallCards: React.FC<MonthlyRainfallCardsProps> = ({
   monthlyTotals,
-  unit,
   onMonthClick,
   darkMode
 }) => {
   const formatRainfall = (value: number): string => {
-    return `${value.toFixed(1)} ${unit}`;
+    return `${value.toFixed(1)} mm`;
   };
 
   const getCardColor = (total: number) => {

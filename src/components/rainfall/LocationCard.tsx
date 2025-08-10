@@ -7,7 +7,6 @@ import { supabase } from '../../lib/supabase';
 
 interface LocationCardProps {
   location: RainfallLocationWithStats;
-  unit: 'mm' | 'inches';
   onSelect: () => void;
   onUpdated: () => void;
   onDeleted: () => void;
@@ -16,7 +15,6 @@ interface LocationCardProps {
 
 const LocationCard: React.FC<LocationCardProps> = ({
   location,
-  unit,
   onSelect,
   onUpdated,
   onDeleted,
@@ -27,7 +25,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
   const [deleting, setDeleting] = useState(false);
 
   const formatRainfall = (value: number): string => {
-    return `${value.toFixed(1)} ${unit}`;
+    return `${value.toFixed(1)} mm`;
   };
 
   const formatDate = (dateString?: string) => {
