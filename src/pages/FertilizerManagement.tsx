@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sprout, Calendar, BarChart3, ArrowLeft } from 'lucide-react';
 import { supabase, PhaseData } from '../lib/supabase';
+import { useLanguage } from '../contexts/LanguageContext';
 import { PhaseStartDateData } from '../lib/fertilizerTypes';
 import PhaseSelector from '../components/fertilizer/PhaseSelector';
 import StartDateModal from '../components/fertilizer/StartDateModal';
@@ -12,6 +13,7 @@ interface FertilizerManagementProps {
 }
 
 const FertilizerManagement: React.FC<FertilizerManagementProps> = ({ darkMode }) => {
+  const { t } = useLanguage();
   const [phases, setPhases] = useState<PhaseData[]>([]);
   const [selectedPhase, setSelectedPhase] = useState<PhaseData | null>(null);
   const [phaseStartDate, setPhaseStartDate] = useState<PhaseStartDateData | null>(null);

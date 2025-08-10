@@ -60,22 +60,22 @@ class ErrorBoundary extends React.Component<
                 </svg>
               </div>
               <h2 className={`text-xl font-bold mb-2 ${darkMode ? 'text-red-400' : 'text-red-600'}`}>
-                {t('somethingWentWrong')}
+                Something went wrong
               </h2>
               <p className={`text-sm mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                {t('errorOccurred')}
+                An error occurred while loading this page
               </p>
               <ul className={`text-xs text-left space-y-1 mb-4 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                <li>• {t('missingComponentFiles')}</li>
-                <li>• {t('databaseConnectionIssues')}</li>
-                <li>• {t('invalidConfiguration')}</li>
+                <li>• Missing component files</li>
+                <li>• Database connection issues</li>
+                <li>• Invalid configuration</li>
               </ul>
             </div>
             
             {this.state.error && (
               <details className={`text-left mb-4 p-3 rounded ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
                 <summary className={`cursor-pointer text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  {t('errorDetails')}
+                  Error Details
                 </summary>
                 <pre className={`mt-2 text-xs whitespace-pre-wrap ${darkMode ? 'text-red-400' : 'text-red-600'}`}>
                   {this.state.error.message}
@@ -92,7 +92,7 @@ class ErrorBoundary extends React.Component<
                     : 'bg-blue-500 hover:bg-blue-600 text-white'
                 }`}
               >
-                {t('tryAgain')}
+                Try Again
               </button>
               <button 
                 onClick={() => window.location.
@@ -104,7 +104,7 @@ reload()}
                     : 'bg-gray-500 hover:bg-gray-600 text-white'
                 }`}
               >
-                {t('reloadPage')}
+                Reload Page
               </button>
             </div>
           </div>
