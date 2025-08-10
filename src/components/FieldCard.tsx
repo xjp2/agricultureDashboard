@@ -59,7 +59,7 @@ const FieldCard: React.FC<FieldCardProps> = ({
         <div className="h-32 bg-gradient-to-r from-green-600 to-green-400 relative">
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="absolute bottom-0 left-0 p-4">
-            <p className="text-white/80 text-sm">Phase {phase}</p>
+            <p className="text-white/80 text-sm">{t('phaseDetails')} {phase}</p>
           </div>
           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
             <button
