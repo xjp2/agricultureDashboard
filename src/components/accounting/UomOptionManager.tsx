@@ -225,10 +225,10 @@ const UomOptionManager: React.FC<UomOptionManagerProps> = ({
                 ) : (
                   <>
                     {editingOption ? <Edit size={16} className="mr-1" /> : <Plus size={16} className="mr-1" />}
-                    {editingOption ? 'Update' : 'Add'} UOM Option
+                    {editingOption ? t('update') : t('add')} {t('uomOption')}
                   </>
                 )}
-                {editingOption ? t('update') : t('add')} {t('uomOption')}
+              </button>
             </div>
           </form>
         </div>

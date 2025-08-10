@@ -224,10 +224,10 @@ const WorkOptionManager: React.FC<WorkOptionManagerProps> = ({
                 ) : (
                   <>
                     {editingOption ? <Edit size={16} className="mr-1" /> : <Plus size={16} className="mr-1" />}
-                    {editingOption ? 'Update' : 'Add'} Work Option
+                    {editingOption ? t('update') : t('add')} {t('workOption')}
                   </>
                 )}
-                {editingOption ? t('update') : t('add')} {t('workOption')}
+              </button>
             </div>
           </form>
         </div>
