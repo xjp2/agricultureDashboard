@@ -29,10 +29,11 @@ const FieldCard: React.FC<FieldCardProps> = ({
   onDeleted,
   onUpdated
 }) => {
+  const { t } = useLanguage();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const { t } = useLanguage();
+  
   const handleDelete = async () => {
     try {
       setDeleting(true);
