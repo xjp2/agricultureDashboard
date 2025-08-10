@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, X } from 'lucide-react';
 import { FilterConfig } from '../../lib/workersTypes';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface WorkerFiltersProps {
   filterConfig: FilterConfig;
@@ -17,6 +18,8 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
   companies,
   darkMode
 }) => {
+  const { t } = useLanguage();
+
   const handleFilterChange = (key: keyof FilterConfig, value: string) => {
     onFilterChange({
       ...filterConfig,
