@@ -16,7 +16,7 @@ const MonthToMonthProgram: React.FC<MonthToMonthProgramProps> = ({
   phaseStartDate,
   darkMode
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [blocks, setBlocks] = useState<BlockData[]>([]);
   const [fertilizerData, setFertilizerData] = useState<MonthFertilizerData[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -175,7 +175,21 @@ const MonthToMonthProgram: React.FC<MonthToMonthProgramProps> = ({
     return days;
   };
 
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const getLocalizedWeekDays = () => {
+    const date = new Date();
+    const locale = language === 'ms' ? 'ms-MY' : language === 'zh' ? 'zh-CN' : 'en-US';
+    const weekDays = [];
+    
+    // Get localized day names starting from Sunday
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(date.setDate(date.getDate() - date.getDay() + i));
+      weekDays.push(day.toLocaleDateString(locale, { weekday: 'short' }));
+    }
+    
+    return weekDays;
+  };
+
+  const weekDays = getLocalizedWeekDays();
 
   if (loading) {
     return (
@@ -224,10 +238,10 @@ const MonthToMonthProgram: React.FC<MonthToMonthProgramProps> = ({
             <ChevronLeft size={20} />
           </button>
           <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-            {currentDate.toLocaleDateString('en-US', { 
-              month: 'long', 
-              year: 'numeric' 
-            })}
+            {currentDate.toLocaleDateString(
+              language === 'ms' ? 'ms-MY' : language === 'zh' ? 'zh-CN' : 'en-US',
+              { month: 'long', year: 'numeric' }
+            )}
           </h3>
           <button
             onClick={() => handleMonthChange('next')}

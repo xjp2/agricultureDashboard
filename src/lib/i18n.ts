@@ -627,6 +627,29 @@ export const translations: Translations = {
     bagSize: 'Saiz Beg',
     totalWeight: 'Jumlah Berat',
     addApplication: 'Tambah Aplikasi',
+    clickToAdd: 'Klik untuk tambah',
+    hasApplications: 'Mempunyai aplikasi',
+    
+    // Worker Management - Filters
+    searchByNameEidDepartment: 'Cari mengikut nama, EID, jabatan...',
+    allDepartments: 'Semua Jabatan',
+    allCompanies: 'Semua Syarikat',
+    dateFrom: 'Tarikh Dari',
+    dateTo: 'Tarikh Hingga',
+    dept: 'Jabatan',
+    noWorkersFound: 'Tiada pekerja ditemui',
+    deleteWorkerConfirmMessage: 'Adakah anda pasti mahu memadam pekerja ini? Tindakan ini tidak boleh dibuat asal.',
+    deleteMultipleWorkersMessage: 'Adakah anda pasti mahu memadam {count} pekerja? Tindakan ini tidak boleh dibuat asal.',
+    previous: 'Sebelumnya',
+    next: 'Seterusnya',
+    page: 'Halaman',
+    of: 'daripada',
+    
+    // Accounting Management
+    loadingAccountingSystem: 'Memuatkan sistem perakaunan...',
+    error: 'Ralat',
+    retry: 'Cuba Lagi',
+    
     // Month names
     month1: 'Jan',
     month2: 'Feb',
@@ -946,6 +969,29 @@ export const translations: Translations = {
     bagSize: '袋装尺寸',
     totalWeight: '总重量',
     addApplication: '添加应用',
+    clickToAdd: '点击添加',
+    hasApplications: '有应用',
+    
+    // Worker Management - Filters
+    searchByNameEidDepartment: '按姓名、员工ID、部门搜索...',
+    allDepartments: '所有部门',
+    allCompanies: '所有公司',
+    dateFrom: '开始日期',
+    dateTo: '结束日期',
+    dept: '部门',
+    noWorkersFound: '未找到工人',
+    deleteWorkerConfirmMessage: '您确定要删除此工人吗？此操作无法撤销。',
+    deleteMultipleWorkersMessage: '您确定要删除{count}个工人吗？此操作无法撤销。',
+    previous: '上一页',
+    next: '下一页',
+    page: '页面',
+    of: '共',
+    
+    // Accounting Management
+    loadingAccountingSystem: '加载会计系统...',
+    error: '错误',
+    retry: '重试',
+    
     // Month names
     month1: '一月',
     month2: '二月',

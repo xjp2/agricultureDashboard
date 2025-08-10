@@ -40,7 +40,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
     <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
       <div className="flex items-center justify-between mb-4">
         <h3 className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-          Filters
+          {t('filters')}
         </h3>
         {hasActiveFilters && (
           <button
@@ -48,7 +48,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
             className={`flex items-center text-sm ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
           >
             <X size={16} className="mr-1" />
-            Clear All
+            {t('clearAll')}
           </button>
         )}
       </div>
@@ -57,7 +57,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
         {/* Search */}
         <div className="lg:col-span-2">
           <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Search
+            {t('search')}
           </label>
           <div className="relative">
             <Search size={16} className={`absolute left-3 top-3 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
@@ -65,7 +65,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
               type="text"
               value={filterConfig.search}
               onChange={(e) => handleFilterChange('search', e.target.value)}
-              placeholder="Search by name, EID, department..."
+              placeholder={t('searchByNameEidDepartment')}
               className={`w-full pl-10 pr-3 py-2 border rounded-md ${
                 darkMode 
                   ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
@@ -78,7 +78,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
         {/* Department */}
         <div>
           <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Department
+            {t('department')}
           </label>
           <select
             value={filterConfig.department}
@@ -89,7 +89,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
                 : 'bg-white border-gray-300 text-gray-900'
             } focus:outline-none focus:ring-2 focus:ring-blue-500`}
           >
-            <option value="">All Departments</option>
+            <option value="">{t('allDepartments')}</option>
             {departments.map(dept => (
               <option key={dept} value={dept}>{dept}</option>
             ))}
@@ -99,7 +99,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
         {/* Company */}
         <div>
           <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Company
+            {t('company')}
           </label>
           <select
             value={filterConfig.company}
@@ -110,7 +110,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
                 : 'bg-white border-gray-300 text-gray-900'
             } focus:outline-none focus:ring-2 focus:ring-blue-500`}
           >
-            <option value="">All Companies</option>
+            <option value="">{t('allCompanies')}</option>
             {companies.map(company => (
               <option key={company} value={company}>{company}</option>
             ))}
@@ -120,7 +120,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
         {/* Date Range */}
         <div>
           <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Date From
+            {t('dateFrom')}
           </label>
           <input
             type="date"
@@ -136,7 +136,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
 
         <div>
           <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Date To
+            {t('dateTo')}
           </label>
           <input
             type="date"
@@ -155,7 +155,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
         <div className="mt-4 flex flex-wrap gap-2">
           {filterConfig.search && (
             <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-100 text-blue-800'}`}>
-              Search: "{filterConfig.search}"
+              {t('search')}: "{filterConfig.search}"
               <button
                 onClick={() => handleFilterChange('search', '')}
                 className="ml-1 hover:text-blue-600"
@@ -166,7 +166,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
           )}
           {filterConfig.department && (
             <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-100 text-green-800'}`}>
-              Dept: {filterConfig.department}
+              {t('dept')}: {filterConfig.department}
               <button
                 onClick={() => handleFilterChange('department', '')}
                 className="ml-1 hover:text-green-600"
@@ -177,7 +177,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
           )}
           {filterConfig.company && (
             <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${darkMode ? 'bg-purple-900/20 text-purple-400' : 'bg-purple-100 text-purple-800'}`}>
-              Company: {filterConfig.company}
+              {t('company')}: {filterConfig.company}
               <button
                 onClick={() => handleFilterChange('company', '')}
                 className="ml-1 hover:text-purple-600"
@@ -188,7 +188,7 @@ const WorkerFilters: React.FC<WorkerFiltersProps> = ({
           )}
           {(filterConfig.dateFrom || filterConfig.dateTo) && (
             <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${darkMode ? 'bg-yellow-900/20 text-yellow-400' : 'bg-yellow-100 text-yellow-800'}`}>
-              Date: {filterConfig.dateFrom || '...'} - {filterConfig.dateTo || '...'}
+              {t('date')}: {filterConfig.dateFrom || '...'} - {filterConfig.dateTo || '...'}
               <button
                 onClick={() => {
                   handleFilterChange('dateFrom', '');

@@ -225,7 +225,7 @@ const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode })
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
-          <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>Loading accounting system...</p>
+          <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('loadingAccountingSystem')}</p>
         </div>
       </div>
     );
@@ -235,12 +235,12 @@ const AccountingManagement: React.FC<AccountingManagementProps> = ({ darkMode })
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <p className="text-red-500 mb-4">Error: {error}</p>
+          <p className="text-red-500 mb-4">{t('error')}: {error}</p>
           <button 
             onClick={fetchInitialData}
             className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
           >
-            Retry
+            {t('retry')}
           </button>
         </div>
       </div>

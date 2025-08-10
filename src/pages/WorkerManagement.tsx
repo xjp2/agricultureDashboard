@@ -419,10 +419,10 @@ const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
                   : darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
               }`}
             >
-              Previous
+              {t('previous')}
             </button>
             <span className={`px-3 py-1 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              Page {pagination.page} of {totalPages}
+              {t('page')} {pagination.page} {t('of')} {totalPages}
             </span>
             <button
               onClick={() => setPagination(prev => ({ ...prev, page: Math.min(totalPages, prev.page + 1) }))}
@@ -433,7 +433,7 @@ const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
                   : darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
               }`}
             >
-              Next
+              {t('next')}
             </button>
           </div>
         </div>
@@ -459,7 +459,7 @@ const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
         }}
         onConfirm={handleWorkerDeleted}
         title="Delete Worker"
-        message="Are you sure you want to delete this worker? This action cannot be undone."
+        message={t('deleteWorkerConfirmMessage')}
         itemName={deletingWorker ? `${deletingWorker.Name} (${deletingWorker.EID})` : ''}
         darkMode={darkMode}
       />
@@ -471,7 +471,7 @@ const WorkerManagement: React.FC<WorkerManagementProps> = ({ darkMode }) => {
         }}
         onConfirm={handleBulkDeleteConfirm}
         title="Delete Multiple Workers"
-        message={`Are you sure you want to delete ${selectedWorkers.length} worker${selectedWorkers.length > 1 ? 's' : ''}? This action cannot be undone.`}
+        message={t('deleteMultipleWorkersMessage', { count: selectedWorkers.length.toString() })}
         itemName={`${selectedWorkers.length} selected worker${selectedWorkers.length > 1 ? 's' : ''}`}
         darkMode={darkMode}
       />

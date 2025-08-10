@@ -178,8 +178,9 @@ const WorkerFormModal: React.FC<WorkerFormModalProps> = ({
           </div>
           <button
             onClick={onClose}
+            className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
           >
-            {t('cancel')}
+            <X size={20} className={darkMode ? 'text-gray-400' : 'text-gray-600'} />
           </button>
         </div>
 
@@ -324,7 +325,7 @@ const WorkerFormModal: React.FC<WorkerFormModalProps> = ({
                   : 'border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50'
               }`}
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               type="submit"
@@ -336,7 +337,7 @@ const WorkerFormModal: React.FC<WorkerFormModalProps> = ({
               ) : (
                 <>
                   {worker ? <Edit size={16} className="mr-1" /> : <UserPlus size={16} className="mr-1" />}
-                  {worker ? 'Update Worker' : 'Add Worker'}
+                  {worker ? t('updateWorker') : t('addWorker')}
                 </>
               )}
             </button>
