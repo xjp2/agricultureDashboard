@@ -180,24 +180,23 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
-    const monthlyTotalsArray: MonthlyTotal[] = [];
-    for (let i = 0; i < 12; i++) {
-      const monthKey = `${currentYear}-${i}`;
-      monthlyTotalsArray.push({
-        month: monthNames[i],
-        monthIndex: i,
-        total: monthlyData[monthKey] || 0
-      });
-    }
+    const monthlyTotalsData: MonthlyTotal[] = monthNames.map((name, index) => {
+      const monthKey = `${currentYear}-${index}`;
+      return {
+        month: name,
+        total: monthlyData[monthKey] || 0,
+        monthIndex: index
+      };
+    });
 
-    setMonthlyTotals(monthlyTotalsArray);
+    setMonthlyTotals(monthlyTotalsData);
 
     // Calculate yearly total
-    const yearlySum = rainfallData
+    const yearlyTotalValue = rainfallData
       .filter(entry => new Date(entry.date).getFullYear() === currentYear)
       .reduce((sum, entry) => sum + entry.rainfall, 0);
     
-    setYearlyTotal(yearlySum);
+    setYearlyTotal(yearlyTotalValue);
   };
 
   const convertUnit = (value: number, fromUnit: 'mm' | 'inches', toUnit: 'mm' | 'inches'): number => {
@@ -513,8 +512,8 @@ const RainfallTracking: React.FC<RainfallTrackingProps> = ({ darkMode }) => {
           darkMode={darkMode}
         />
         <StatCard
-          title={t('averagePerDayOfYear')}
-          value={getAverageRainyDays().toFixed(3)}
+          title={t('averageRainfallPerDay')}
+          value={formatRainfall(getAverageRainfall())}
           icon={<TrendingUp size={20} />}
           trend={0}
           color="purple"
