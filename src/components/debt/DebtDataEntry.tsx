@@ -401,7 +401,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                   </th>
                 </tr>
               </thead>
-              <tbody className={\`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
+              <tbody className={`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
                 {recentEntries.map((entry) => (
                   <tr key={entry.id} className={darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
