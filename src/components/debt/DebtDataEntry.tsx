@@ -331,7 +331,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-red-500`}
-                placeholder={t('enterDebtAmount')}
+                placeholder={editingEntry ? t('editDebtEntry') : t('addNewDebtEntry')}
               />
             </div>
           </div>
@@ -368,7 +368,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
 
       {/* Recent Entries */}
       <div className={`p-6 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-        <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+        <h3 className={\`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
           {t('recentDebtEntries')}
         </h3>
         
@@ -384,38 +384,38 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-50'}>
                 <tr>
-                  <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
+                  <th className={\`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
                     {t('monthYear')}
                   </th>
-                  <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
+                  <th className={\`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
                     {t('workers')}
                   </th>
-                  <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
+                  <th className={\`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
                     {t('category')}
                   </th>
-                  <th className={`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
+                  <th className={\`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
                     {t('amount')}
                   </th>
-                  <th className={`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
+                  <th className={\`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
                     {t('actions')}
                   </th>
                 </tr>
               </thead>
-              <tbody className={`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
+              <tbody className={\`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
                 {recentEntries.map((entry) => (
                   <tr key={entry.id} className={darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <td className={\`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                       {formatMonthYear(entry.month_year)}
                     </td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <td className={\`px-6 py-4 whitespace-nowrap text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                       {entry.worker_name}
                     </td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                      <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-red-900/20 text-red-400' : 'bg-red-100 text-red-800'}`}>
+                    <td className={\`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      <span className={\`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-red-900/20 text-red-400' : 'bg-red-100 text-red-800'}`}>
                         {entry.category}
                       </span>
                     </td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold text-center ${darkMode ? 'text-red-400' : 'text-red-600'}`}>
+                    <td className={\`px-6 py-4 whitespace-nowrap text-sm font-semibold text-center ${darkMode ? 'text-red-400' : 'text-red-600'}`}>
                       ${entry.amount.toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
@@ -429,7 +429,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                         </button>
                         <button
                           onClick={() => handleDelete(entry.id)}
-                          className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-600 text-red-400' : 'hover:bg-gray-100 text-red-600'}`}
+                          className={\`p-1 rounded-full ${darkMode ? 'hover:bg-gray-600 text-red-400' : 'hover:bg-gray-100 text-red-600'}`}
                           title="Delete debt entry"
                         >
                           <Trash2 size={16} />
@@ -457,5 +457,3 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
 };
 
 export default DebtDataEntry;
-
-export default DebtDataEntry
