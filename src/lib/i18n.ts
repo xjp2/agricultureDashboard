@@ -1826,6 +1826,21 @@ const translations: Translations = {
     ms: 'Jumlah Komisi',
     zh: '总佣金'
   },
+  filtered: {
+    en: 'Filtered',
+    ms: 'Ditapis',
+    zh: '已筛选'
+  },
+  from: {
+    en: 'from',
+    ms: 'dari',
+    zh: '从'
+  },
+  to: {
+    en: 'to',
+    ms: 'hingga',
+    zh: '到'
+  },
 
   // Month names for calendar
   month1: { en: 'Jan', ms: 'Jan', zh: '一月' },
