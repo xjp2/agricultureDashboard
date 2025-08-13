@@ -331,7 +331,6 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-red-500`}
-                placeholder={editingEntry ? t('editDebtEntry') : t('addNewDebtEntry')}
               />
             </div>
           </div>
@@ -388,7 +387,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                     {t('monthYear')}
                   </th>
                   <th className={\`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                    {t('workers')}
+                    {t('workerName')}
                   </th>
                   <th className={\`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
                     {t('category')}
@@ -423,14 +422,14 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                         <button
                           onClick={() => handleEdit(entry)}
                           className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-600 text-blue-400' : 'hover:bg-gray-100 text-blue-600'}`}
-                          title="Edit debt entry"
+                          title={t('editDebtEntry')}
                         >
                           <Edit size={16} />
                         </button>
                         <button
                           onClick={() => handleDelete(entry.id)}
                           className={\`p-1 rounded-full ${darkMode ? 'hover:bg-gray-600 text-red-400' : 'hover:bg-gray-100 text-red-600'}`}
-                          title="Delete debt entry"
+                          title={t('delete') + ' ' + t('debtEntry')}
                         >
                           <Trash2 size={16} />
                         </button>
