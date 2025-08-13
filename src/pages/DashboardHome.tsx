@@ -156,8 +156,9 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
 
       // Calculate accounting statistics
       const totalEarnings = accountingData?.reduce((sum, entry) => sum + entry.total, 0) || 0;
-      const currentMonthName = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-      const currentMonthEarnings = accountingData?.filter(entry => entry.month === currentMonthName)
+      const currentDate = new Date();
+      const currentMonthValue = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+      const currentMonthEarnings = accountingData?.filter(entry => entry.month === currentMonthValue)
         .reduce((sum, entry) => sum + entry.total, 0) || 0;
 
       // Calculate fertilizer statistics

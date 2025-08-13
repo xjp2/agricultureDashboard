@@ -114,8 +114,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
   };
 
   const resetForm = () => {
-    const currentDate = new Date();
-    const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+    const currentMonth = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     setFormData({
       month: currentMonth,
       name: '',
@@ -264,7 +263,8 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
               <label className={"block text-sm font-medium mb-1 " + (darkMode ? 'text-gray-300' : 'text-gray-700')}>
                 {t('month')} *
               </label>
-              <select
+              <input
+                type="month"
                 name="month"
                 value={formData.month}
                 onChange={handleInputChange}
@@ -274,12 +274,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 ) + " focus:outline-none focus:ring-2 focus:ring-green-500"}
-              >
-                <option value="">{t('selectMonth')}</option>
-                {generateMonthOptions().map(month => (
-                  <option key={month} value={month}>{month}</option>
-                ))}
-              </select>
+              />
             </div>
 
             {/* Worker Name */}
