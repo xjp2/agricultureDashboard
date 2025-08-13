@@ -331,6 +331,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-red-500`}
+                placeholder={editingEntry ? t('editDebtEntry') : t('addNewDebtEntry')}
               />
             </div>
           </div>
@@ -422,14 +423,14 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                         <button
                           onClick={() => handleEdit(entry)}
                           className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-600 text-blue-400' : 'hover:bg-gray-100 text-blue-600'}`}
-                          title={t('editDebtEntry')}
+                          title="Edit debt entry"
                         >
                           <Edit size={16} />
                         </button>
                         <button
                           onClick={() => handleDelete(entry.id)}
                           className={\`p-1 rounded-full ${darkMode ? 'hover:bg-gray-600 text-red-400' : 'hover:bg-gray-100 text-red-600'}`}
-                          title={t('delete') + ' ' + t('debtEntry')}
+                          title="Delete debt entry"
                         >
                           <Trash2 size={16} />
                         </button>
