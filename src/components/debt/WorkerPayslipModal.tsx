@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, FileText, Printer, Download } from 'lucide-react';
 import { WorkerDebtSummary } from '../../lib/debtTypes';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface WorkerPayslipModalProps {
   isOpen: boolean;
@@ -15,6 +16,8 @@ const WorkerPayslipModal: React.FC<WorkerPayslipModalProps> = ({
   worker,
   darkMode
 }) => {
+  const { t } = useLanguage();
+
   const formatMonthYear = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   };
