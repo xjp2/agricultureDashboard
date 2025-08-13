@@ -266,10 +266,10 @@ Generated on ${new Date().toLocaleString()}
           {/* Earnings and Deductions */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className={`p-4 rounded-lg border ${darkMode ? 'bg-green-900/10 border-green-900/20' : 'bg-green-50 border-green-200'}`}>
-              <h3 className={`font-semibold mb-4 ${darkMode ? 'text-green-400' : 'text-green-800'}`}>Earnings</h3>
+              <h3 className={`font-semibold mb-4 ${darkMode ? 'text-green-400' : 'text-green-800'}`}>{t('earnings')}</h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-green-200 dark:border-green-800">
-                  <span className={darkMode ? 'text-green-300' : 'text-green-700'}>Total Earnings:</span>
+                  <span className={darkMode ? 'text-green-300' : 'text-green-700'}>{t('totalEarnings')}:</span>
                   <span className={`text-lg font-bold ${darkMode ? 'text-green-400' : 'text-green-600'}`}>
                     ${worker.totalEarnings.toFixed(2)}
                   </span>
@@ -278,7 +278,7 @@ Generated on ${new Date().toLocaleString()}
             </div>
 
             <div className={`p-4 rounded-lg border ${darkMode ? 'bg-red-900/10 border-red-900/20' : 'bg-red-50 border-red-200'}`}>
-              <h3 className={`font-semibold mb-4 ${darkMode ? 'text-red-400' : 'text-red-800'}`}>Deductions</h3>
+              <h3 className={`font-semibold mb-4 ${darkMode ? 'text-red-400' : 'text-red-800'}`}>{t('deductions')}</h3>
               <div className="space-y-2">
                 {Object.entries(worker.debtsByCategory).map(([category, amount]) => (
                   <div key={category} className="flex justify-between items-center py-1">
@@ -289,7 +289,7 @@ Generated on ${new Date().toLocaleString()}
                   </div>
                 ))}
                 <div className="flex justify-between items-center py-2 border-t-2 border-red-300 dark:border-red-700 mt-3">
-                  <span className={`font-bold ${darkMode ? 'text-red-300' : 'text-red-700'}`}>Total Deductions:</span>
+                  <span className={`font-bold ${darkMode ? 'text-red-300' : 'text-red-700'}`}>{t('totalDeductions')}:</span>
                   <span className={`text-lg font-bold ${darkMode ? 'text-red-400' : 'text-red-600'}`}>
                     ${worker.totalDebt.toFixed(2)}
                   </span>

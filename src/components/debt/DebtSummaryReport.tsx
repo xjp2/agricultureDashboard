@@ -123,9 +123,8 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
 
     // Process accounting data to get earnings for the same months
     filteredAccountingData.forEach(earning => {
-      // Convert accounting month to date format
-      const earningDate = new Date(earning.month + ' 01');
-      const earningMonthYear = `${earningDate.getFullYear()}-${String(earningDate.getMonth() + 1).padStart(2, '0')}-01`;
+      // Use the month as stored in accounting data (already in "Month YYYY" format)
+      const earningMonthYear = earning.month;
       
       const key = `${earning.name}-${earningMonthYear}`;
       
@@ -430,7 +429,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
             <TrendingUp size={24} className="text-green-500" />
           </div>
         </div>
-                {t('totalDebt')}
+        <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <div className="flex items-center justify-between">
             <div>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Debt</p>
@@ -443,7 +442,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
         </div>
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <div className="flex items-center justify-between">
-                {t('netAmount')}
+            <div>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Net Amount</p>
               <p className={`text-2xl font-bold ${
                 totalNetAmount >= 0 
@@ -576,7 +575,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
           <div className="flex justify-between items-center">
             <div>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                {t('totalWorkers')}
+                {t('showing')} {workerDebtSummaries.length} {t('workers')}
               </p>
             </div>
             <div className="text-right">
@@ -593,7 +592,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
 
       {/* Worker Payslip Modal */}
       {showPayslipModal && selectedWorker && (
-                {t('totalEarnings')}
+        <WorkerPayslipModal
           isOpen={showPayslipModal}
           onClose={() => {
             setShowPayslipModal(false);
