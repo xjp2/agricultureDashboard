@@ -201,3 +201,5 @@ const translations: Translations = {
     en: 'Worker earnings vs debt analysis with net calculations',
     ms: 'Analisis pendapatan pekerja vs hutang dengan pengiraan bersih',
     zh: '工人收入与债务分析及净额计算'
+  }
+}
