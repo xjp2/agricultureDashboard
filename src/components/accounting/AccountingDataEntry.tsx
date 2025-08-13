@@ -114,7 +114,8 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
   };
 
   const resetForm = () => {
-    const currentMonth = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    const currentDate = new Date();
+    const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
     setFormData({
       month: currentMonth,
       name: '',

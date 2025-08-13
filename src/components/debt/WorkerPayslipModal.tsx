@@ -304,7 +304,7 @@ Generated on ${new Date().toLocaleString()}
               ? darkMode ? 'bg-green-900/20 border-green-500' : 'bg-green-50 border-green-300'
               : darkMode ? 'bg-red-900/20 border-red-500' : 'bg-red-50 border-red-300'
           }`}>
-            <h3 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>NET AMOUNT</h3>
+            <h3 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>{t('netAmount').toUpperCase()}</h3>
             <p className={`text-3xl font-bold mb-2 ${
               worker.netAmount >= 0 
                 ? darkMode ? 'text-green-400' : 'text-green-600'
@@ -313,7 +313,7 @@ Generated on ${new Date().toLocaleString()}
               ${worker.netAmount.toFixed(2)}
             </p>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              {worker.netAmount >= 0 ? 'Amount to be paid to worker' : 'Amount owed by worker'}
+              {worker.netAmount >= 0 ? t('amountToBePaid') : t('amountOwedByWorker')}
             </p>
           </div>
 

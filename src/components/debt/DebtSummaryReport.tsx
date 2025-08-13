@@ -411,7 +411,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalWorkers')}</p>
+              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Workers</p>
               <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 {workerDebtSummaries.length}
               </p>
@@ -422,7 +422,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalEarnings')}</p>
+              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Earnings</p>
               <p className={`text-2xl font-bold ${darkMode ? 'text-green-400' : 'text-green-600'}`}>
                 ${totalEarnings.toFixed(2)}
               </p>
@@ -433,7 +433,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalDebt')}</p>
+              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Debt</p>
               <p className={`text-2xl font-bold ${darkMode ? 'text-red-400' : 'text-red-600'}`}>
                 ${totalDebt.toFixed(2)}
               </p>
@@ -444,7 +444,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('netAmount')}</p>
+              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Net Amount</p>
               <p className={`text-2xl font-bold ${
                 totalNetAmount >= 0 
                   ? darkMode ? 'text-green-400' : 'text-green-600'
@@ -576,15 +576,15 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
           <div className="flex justify-between items-center">
             <div>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Showing {workerDebtSummaries.length} worker records
+                {t('showing')} {workerDebtSummaries.length} {t('workers')}
               </p>
             </div>
             <div className="text-right">
               <p className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                Net Total: ${totalNetAmount.toFixed(2)}
+                {t('netAmount')}: ${totalNetAmount.toFixed(2)}
               </p>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Earnings: ${totalEarnings.toFixed(2)} - Debt: ${totalDebt.toFixed(2)}
+                {t('earnings')}: ${totalEarnings.toFixed(2)} - {t('totalDebt')}: ${totalDebt.toFixed(2)}
               </p>
             </div>
           </div>
