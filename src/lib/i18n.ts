@@ -201,9 +201,64 @@ const translations: Translations = {
     en: 'Worker earnings vs debt analysis with net calculations',
     ms: 'Analisis pendapatan pekerja vs hutang dengan pengiraan bersih',
     zh: '工人收入与债务分析及净额计算'
+  },
+  selectMonthYearForPayslips: {
+    en: 'Select Month/Year for Payslips',
+    ms: 'Pilih Bulan/Tahun untuk Slip Gaji',
+    zh: '选择工资单的月份/年份'
+  },
+  payslipsFor: {
+    en: 'payslips for',
+    ms: 'slip gaji untuk',
+    zh: '工资单为'
+  },
+  selectMonthToViewPayslips: {
+    en: 'Select a month to view payslips',
+    ms: 'Pilih bulan untuk melihat slip gaji',
+    zh: '选择月份查看工资单'
+  },
+  selectMonthToViewData: {
+    en: 'Select Month to View Data',
+    ms: 'Pilih Bulan untuk Melihat Data',
+    zh: '选择月份查看数据'
+  },
+  chooseMonthYearFromDropdown: {
+    en: 'Choose a month and year from the dropdown above to view worker payslips',
+    ms: 'Pilih bulan dan tahun dari dropdown di atas untuk melihat slip gaji pekerja',
+    zh: '从上方下拉菜单选择月份和年份以查看工人工资单'
+  },
+  workersInMonth: {
+    en: 'Workers in Month',
+    ms: 'Pekerja dalam Bulan',
+    zh: '本月工人'
+  },
+  workersFor: {
+    en: 'workers for',
+    ms: 'pekerja untuk',
+    zh: '工人为'
+  },
+  noDataForSelectedMonth: {
+    en: 'No Data for Selected Month',
+    ms: 'Tiada Data untuk Bulan Dipilih',
+    zh: '所选月份无数据'
+  },
+  noWorkersFoundForMonth: {
+    en: 'No workers found for {month}',
+    ms: 'Tiada pekerja dijumpai untuk {month}',
+    zh: '未找到 {month} 的工人'
+  },
+  filteredResults: {
+    en: 'Filtered results',
+    ms: 'Hasil ditapis',
+    zh: '筛选结果'
+  },
+  allWorkersForMonth: {
+    en: 'All workers for selected month',
+    ms: 'Semua pekerja untuk bulan dipilih',
+    zh: '所选月份的所有工人'
   }
 }
-export function getTranslation(language: Language, key: string): string {
+export function getTranslation(language: Language, key: string, params?: { [key: string]: string | number }): string {
   const translation = translations[key];
   if (!translation) {
     console.warn(`Translation key "${key}" not found`);
@@ -214,6 +269,15 @@ export function getTranslation(language: Language, key: string): string {
   if (!translatedText) {
     console.warn(`Translation for "${key}" not found in language "${language}"`);
     return translation.en || key;
+  }
+  
+  // Replace parameters in the translation
+  if (params) {
+    let result = translatedText;
+    Object.entries(params).forEach(([param, value]) => {
+      result = result.replace(`{${param}}`, String(value));
+    });
+    return result;
   }
   
   return translatedText;

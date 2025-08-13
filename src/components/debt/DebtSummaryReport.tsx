@@ -20,6 +20,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
   darkMode
 }) => {
   const { t } = useLanguage();
+  const [selectedMonthYear, setSelectedMonthYear] = useState<string>('');
   const [filterConfig, setFilterConfig] = useState<FilterConfig>({
     search: '',
     category: '',
@@ -33,6 +34,15 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
   const [showFilters, setShowFilters] = useState(false);
   const [selectedWorker, setSelectedWorker] = useState<WorkerDebtSummary | null>(null);
   const [showPayslipModal, setShowPayslipModal] = useState(false);
+
+  // Set default selected month to current month
+  useEffect(() => {
+    if (!selectedMonthYear) {
+      const currentDate = new Date();
+      const currentMonth = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      setSelectedMonthYear(currentMonth);
+    }
+  }, []);
 
   // Generate unlimited month/year options
   const generateMonthOptions = () => {
@@ -66,26 +76,14 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
 
   // Process monthly worker summaries (group by worker AND month)
   const monthlyWorkerSummaries = useMemo(() => {
-    let filteredDebtData = [...debtData];
-    let filteredAccountingData = [...accountingData];
-
-    // Apply month range filters
-    if (filterConfig.monthFrom) {
-      filteredDebtData = filteredDebtData.filter(entry => {
-        return compareMonths(entry.month_year, filterConfig.monthFrom) >= 0;
-      });
-      filteredAccountingData = filteredAccountingData.filter(entry => {
-        return compareMonths(entry.month, filterConfig.monthFrom) >= 0;
-      });
-    }
-    if (filterConfig.monthTo) {
-      filteredDebtData = filteredDebtData.filter(entry => {
-        return compareMonths(entry.month_year, filterConfig.monthTo) <= 0;
-      });
-      filteredAccountingData = filteredAccountingData.filter(entry => {
-        return compareMonths(entry.month, filterConfig.monthTo) <= 0;
-      });
-    }
+    // Filter by selected month/year only
+    let filteredDebtData = selectedMonthYear 
+      ? debtData.filter(entry => entry.month_year === selectedMonthYear)
+      : [];
+    
+    let filteredAccountingData = selectedMonthYear 
+      ? accountingData.filter(entry => entry.month === selectedMonthYear)
+      : [];
 
     // Apply category filter
     if (filterConfig.category) {
@@ -189,7 +187,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
     });
 
     return summaries;
-  }, [debtData, accountingData, workers, filterConfig, sortConfig]);
+  }, [debtData, accountingData, workers, selectedMonthYear, filterConfig, sortConfig]);
 
   const handleSort = (key: string) => {
     setSortConfig(prev => ({
@@ -253,7 +251,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
               {t('debtSummaryReport')}
             </h3>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              {t('monthlyWorkerEarningsVsDebt')}
+              {selectedMonthYear ? `${t('monthlyWorkerEarningsVsDebt')} - ${selectedMonthYear}` : t('monthlyWorkerEarningsVsDebt')}
             </p>
           </div>
         </div>
@@ -279,10 +277,43 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
         </div>
       </div>
 
+      {/* Month/Year Selector */}
+      <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+          <div>
+            <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              {t('selectMonthYearForPayslips')} *
+            </label>
+            <select
+              value={selectedMonthYear}
+              onChange={(e) => setSelectedMonthYear(e.target.value)}
+              className={`w-full px-3 py-2 border rounded-md ${
+                darkMode 
+                  ? 'bg-gray-700 border-gray-600 text-white' 
+                  : 'bg-white border-gray-300 text-gray-900'
+              } focus:outline-none focus:ring-2 focus:ring-red-500`}
+            >
+              <option value="">{t('selectMonthYear')}</option>
+              {generateMonthOptions().map(month => (
+                <option key={month} value={month}>{month}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {selectedMonthYear 
+                ? `${t('showing')} ${t('payslipsFor')} ${selectedMonthYear}`
+                : t('selectMonthToViewPayslips')
+              }
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Filters */}
       {showFilters && (
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 {t('search')}
@@ -298,44 +329,6 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-red-500`}
               />
-            </div>
-            <div>
-              <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('fromMonth')}
-              </label>
-              <select
-                value={filterConfig.monthFrom}
-                onChange={(e) => setFilterConfig(prev => ({ ...prev, monthFrom: e.target.value }))}
-                className={`w-full px-3 py-2 border rounded-md ${
-                  darkMode 
-                    ? 'bg-gray-700 border-gray-600 text-white' 
-                    : 'bg-white border-gray-300 text-gray-900'
-                } focus:outline-none focus:ring-2 focus:ring-red-500`}
-              >
-                <option value="">{t('selectStartMonth')}</option>
-                {generateMonthOptions().map(month => (
-                  <option key={month} value={month}>{month}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('toMonth')}
-              </label>
-              <select
-                value={filterConfig.monthTo}
-                onChange={(e) => setFilterConfig(prev => ({ ...prev, monthTo: e.target.value }))}
-                className={`w-full px-3 py-2 border rounded-md ${
-                  darkMode 
-                    ? 'bg-gray-700 border-gray-600 text-white' 
-                    : 'bg-white border-gray-300 text-gray-900'
-                } focus:outline-none focus:ring-2 focus:ring-red-500`}
-              >
-                <option value="">{t('selectEndMonth')}</option>
-                {generateMonthOptions().map(month => (
-                  <option key={month} value={month}>{month}</option>
-                ))}
-              </select>
             </div>
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -359,22 +352,12 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
           </div>
           
           {/* Active Filters Display */}
-          {(filterConfig.monthFrom || filterConfig.monthTo || filterConfig.category || filterConfig.search) && (
+          {(filterConfig.category || filterConfig.search) && (
             <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
               <p className={`text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 {t('activeFilters')}:
               </p>
               <div className="flex flex-wrap gap-2">
-                {filterConfig.monthFrom && (
-                  <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-100 text-blue-800'}`}>
-                    {t('from')}: {filterConfig.monthFrom}
-                  </span>
-                )}
-                {filterConfig.monthTo && (
-                  <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-100 text-blue-800'}`}>
-                    {t('to')}: {filterConfig.monthTo}
-                  </span>
-                )}
                 {filterConfig.category && (
                   <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-purple-900/20 text-purple-400' : 'bg-purple-100 text-purple-800'}`}>
                     {t('category')}: {filterConfig.category}
@@ -391,12 +374,25 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
         </div>
       )}
 
+      {/* No Month Selected Message */}
+      {!selectedMonthYear ? (
+        <div className="text-center py-12">
+          <Calculator size={64} className="mx-auto mb-4 text-gray-400" />
+          <h3 className={`text-lg font-medium mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+            {t('selectMonthToViewData')}
+          </h3>
+          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-6`}>
+            {t('chooseMonthYearFromDropdown')}
+          </p>
+        </div>
+      ) : (
+        <>
       {/* Summary Statistics (based on filtered data) */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('monthlyRecords')}</p>
+              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('workersInMonth')}</p>
               <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 {monthlyWorkerSummaries.length}
               </p>
@@ -468,15 +464,6 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
                   </div>
                 </th>
                 <th
-                  className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600`}
-                  onClick={() => handleSort('month_year')}
-                >
-                  <div className="flex items-center space-x-1">
-                    <span>{t('monthYear')}</span>
-                    {getSortIcon('month_year')}
-                  </div>
-                </th>
-                <th
                   className={`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600`}
                   onClick={() => handleSort('totalEarnings')}
                 >
@@ -511,11 +498,11 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
             <tbody className={`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
               {monthlyWorkerSummaries.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className={`px-6 py-12 text-center ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  <td colSpan={6} className={`px-6 py-12 text-center ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                     <div className="flex flex-col items-center">
                       <Calculator size={48} className="mb-4 text-gray-400" />
-                      <p className="text-lg font-medium mb-2">{t('noDataFound')}</p>
-                      <p className="text-sm">{t('tryAdjustingFilters')}</p>
+                      <p className="text-lg font-medium mb-2">{t('noDataForSelectedMonth')}</p>
+                      <p className="text-sm">{t('noWorkersFoundForMonth', { month: selectedMonthYear })}</p>
                     </div>
                   </td>
                 </tr>
@@ -529,9 +516,6 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
                       <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800'}`}>
                         {worker.eid}
                       </span>
-                    </td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                      {worker.month_year}
                     </td>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold text-center ${darkMode ? 'text-green-400' : 'text-green-600'}`}>
                       ${worker.totalEarnings.toFixed(2)}
@@ -579,13 +563,10 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
           <div className="flex justify-between items-center">
             <div>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                {t('showing')} {monthlyWorkerSummaries.length} {t('monthlyRecords')}
+                {t('showing')} {monthlyWorkerSummaries.length} {t('workersFor')} {selectedMonthYear}
               </p>
               <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                {filterConfig.monthFrom || filterConfig.monthTo ? 
-                  `${t('filtered')} ${filterConfig.monthFrom ? `${t('from')} ${filterConfig.monthFrom}` : ''} ${filterConfig.monthTo ? `${t('to')} ${filterConfig.monthTo}` : ''}` :
-                  t('allTimeData')
-                }
+                {filterConfig.category || filterConfig.search ? t('filteredResults') : t('allWorkersForMonth')}
               </p>
             </div>
             <div className="text-right">
@@ -598,6 +579,8 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
             </div>
           </div>
         </div>
+      )}
+        </>
       )}
 
       {/* Worker Payslip Modal */}
