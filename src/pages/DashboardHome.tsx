@@ -480,5 +480,3 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
 };
 
 export default DashboardHome;
-  )
-}
