@@ -368,7 +368,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
 
       {/* Recent Entries */}
       <div className={`p-6 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-        <h3 className={\`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+        <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
           {t('recentDebtEntries')}
         </h3>
         
