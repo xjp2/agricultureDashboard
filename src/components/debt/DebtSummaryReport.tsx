@@ -123,7 +123,8 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
 
     // Process accounting data to get earnings for the same months
     filteredAccountingData.forEach(earning => {
-      // Convert accounting month to date format
+      // Both accounting and debt data use the same month format (e.g., "August 2025")
+      // Convert to the same format as debt data for matching
       const earningDate = new Date(earning.month + ' 01');
       const earningMonthYear = `${earningDate.getFullYear()}-${String(earningDate.getMonth() + 1).padStart(2, '0')}-01`;
       
@@ -133,6 +134,22 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
         const summary = summaryMap.get(key)!;
         summary.totalEarnings += earning.total;
         summary.earningsEntries += 1;
+      } else {
+        // Create a new entry if worker has earnings but no debt for this month
+        const worker = workers.find(w => w.Name === earning.name);
+        if (worker) {
+          summaryMap.set(key, {
+            worker_name: earning.name,
+            eid: worker.EID,
+            month_year: earningMonthYear,
+            totalEarnings: earning.total,
+            totalDebt: 0,
+            netAmount: earning.total,
+            debtsByCategory: {},
+            earningsEntries: 1,
+            debtEntries: 0
+          });
+        }
       }
     });
 
