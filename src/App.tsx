@@ -7,6 +7,7 @@ import RainfallTracking from './pages/RainfallTracking';
 import FertilizerManagement from './pages/FertilizerManagement';
 import WorkerManagement from './pages/WorkerManagement';
 import AccountingManagement from './pages/AccountingManagement';
+import DebtManagement from './pages/DebtManagement';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useLanguage } from './contexts/LanguageContext';
 import LanguageSelector from './components/LanguageSelector';
@@ -169,6 +170,12 @@ function App() {
             <AccountingManagement darkMode={darkMode} />
           </ErrorBoundary>
         );
+      case 'debt':
+        return (
+          <ErrorBoundary darkMode={darkMode} t={t}>
+            <DebtManagement darkMode={darkMode} />
+          </ErrorBoundary>
+        );
       default:
         return (
           <ErrorBoundary darkMode={darkMode} t={t}>
@@ -205,6 +212,7 @@ function App() {
                currentPage === 'fertilizer' ? t('fertilizer') :
                currentPage === 'workers' ? t('workers') :
                currentPage === 'accounting' ? t('accounting') :
+               currentPage === 'debt' ? 'Debt Management' :
                t('dashboard')}
             </h1>
           </div>

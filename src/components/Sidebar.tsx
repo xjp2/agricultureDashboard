@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Bone as Drone, Map, Users, Package, BarChart4, Sprout, Cloud, Settings, LogOut, CloudRain, Leaf, Calculator } from 'lucide-react';
+import { LayoutDashboard, Bone as Drone, Map, Users, Package, BarChart4, Sprout, Cloud, Settings, LogOut, CloudRain, Leaf, Calculator, CreditCard } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface SidebarProps {
@@ -24,6 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     { id: 'fertilizer', label: t('fertilizer'), icon: <Leaf size={20} /> },
     { id: 'workers', label: t('workers'), icon: <Users size={20} /> },
     { id: 'accounting', label: t('accounting'), icon: <Calculator size={20} /> },
+    { id: 'debt', label: 'Debt', icon: <CreditCard size={20} /> },
   ];
 
   return (
