@@ -203,3 +203,18 @@ const translations: Translations = {
     zh: '工人收入与债务分析及净额计算'
   }
 }
+export function getTranslation(language: Language, key: string): string {
+  const translation = translations[key];
+  if (!translation) {
+    console.warn(`Translation key "${key}" not found`);
+    return key;
+  }
+  
+  const translatedText = translation[language];
+  if (!translatedText) {
+    console.warn(`Translation for "${key}" not found in language "${language}"`);
+    return translation.en || key;
+  }
+  
+  return translatedText;
+}
