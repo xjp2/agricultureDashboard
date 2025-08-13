@@ -230,7 +230,7 @@ const DebtManagement: React.FC<DebtManagementProps> = ({ darkMode }) => {
             }`}
           >
             <Plus size={16} className="mr-1" />
-            Entry
+            {t('entry')}
           </button>
           <button
             onClick={() => setCurrentView('summary')}
@@ -241,7 +241,7 @@ const DebtManagement: React.FC<DebtManagementProps> = ({ darkMode }) => {
             }`}
           >
             <FileText size={16} className="mr-1" />
-            Summary & Payslips
+            {t('debtSummary')}
           </button>
         </div>
       </div>

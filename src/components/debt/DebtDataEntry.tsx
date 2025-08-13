@@ -38,7 +38,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
     fetchRecentEntries();
     // Set default month to current month
     const currentDate = new Date();
-    const currentMonthYear = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-01`;
+    const currentMonthYear = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
     setFormData(prev => ({ ...prev, month_year: currentMonthYear }));
 
     // Set default category to first available option
@@ -69,9 +69,8 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
     // Generate last 12 months and next 6 months
     for (let i = -12; i <= 6; i++) {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, 1);
-      const monthString = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-      const monthValue = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-01`;
-      months.push({ label: monthString, value: monthValue });
+      const monthValue = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      months.push(monthValue);
     }
     
     return months;
@@ -94,7 +93,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
 
   const resetForm = () => {
     const currentDate = new Date();
-    const currentMonthYear = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-01`;
+    const currentMonthYear = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
     setFormData({
       month_year: currentMonthYear,
       worker_name: '',
@@ -120,8 +119,13 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
         throw new Error('Amount must be greater than 0');
       }
 
+      // Convert month format for storage (YYYY-MM to "Month YYYY")
+      const [year, month] = formData.month_year.split('-');
+      const monthDate = new Date(parseInt(year), parseInt(month) - 1, 1);
+      const formattedMonth = monthDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
       const debtEntry = {
-        month_year: formData.month_year,
+        month_year: formattedMonth,
         worker_name: formData.worker_name,
         category: formData.category,
         amount: formData.amount
@@ -156,8 +160,12 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
   };
 
   const handleEdit = (entry: DebtData) => {
+    // Convert stored month format back to YYYY-MM for the input
+    const monthDate = new Date(entry.month_year + ' 01');
+    const monthValue = `${monthDate.getFullYear()}-${String(monthDate.getMonth() + 1).padStart(2, '0')}`;
+    
     setFormData({
-      month_year: entry.month_year,
+      month_year: monthValue,
       worker_name: entry.worker_name,
       category: entry.category,
       amount: entry.amount
@@ -187,7 +195,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
   };
 
   const formatMonthYear = (dateString: string) => {
-    return new Date(dateString + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    return new Date(dateString + ' 01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   };
 
   return (
@@ -227,9 +235,10 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
             {/* Month/Year */}
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Month/Year *
+                {t('monthYear')} *
               </label>
-              <select
+              <input
+                type="month"
                 name="month_year"
                 value={formData.month_year}
                 onChange={handleInputChange}
@@ -239,18 +248,13 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-red-500`}
-              >
-                <option value="">Select Month/Year</option>
-                {generateMonthOptions().map(month => (
-                  <option key={month.value} value={month.value}>{month.label}</option>
-                ))}
-              </select>
+              />
             </div>
 
             {/* Worker Name */}
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Worker Name *
+                {t('workerName')} *
               </label>
               <select
                 name="worker_name"
@@ -263,7 +267,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-red-500`}
               >
-                <option value="">Select Worker</option>
+                <option value="">{t('selectWorker')}</option>
                 {workers.map(worker => (
                   <option key={worker.id} value={worker.Name}>
                     {worker.Name} ({worker.EID})
@@ -275,7 +279,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
             {/* Debt Category */}
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Debt Category *
+                {t('debtCategory')} *
               </label>
               <div className="flex items-end gap-2">
                 <select
@@ -289,7 +293,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                       : 'bg-white border-gray-300 text-gray-900'
                   } focus:outline-none focus:ring-2 focus:ring-red-500`}
                 >
-                  <option value="">Select Category</option>
+                  <option value="">{t('selectCategory')}</option>
                   {debtOptions.map(option => (
                     <option key={option.id} value={option.category_name}>
                       {option.category_name}
@@ -302,7 +306,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                   className={`px-3 py-2 rounded-md text-sm ${
                     darkMode ? 'bg-red-900/20 text-red-400 hover:bg-red-900/30' : 'bg-red-100 text-red-800 hover:bg-red-200'
                   }`}
-                  title="Manage debt categories"
+                  title={t('manageDebtCategories')}
                 >
                   <Settings size={16} />
                 </button>
@@ -312,7 +316,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
             {/* Amount */}
             <div>
               <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Amount *
+                {t('amount')} *
               </label>
               <input
                 type="number"
@@ -327,10 +331,10 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                     ? 'bg-gray-700 border-gray-600 text-white' 
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-red-500`}
-                placeholder="Enter debt amount"
+                {editingEntry ? t('editDebtEntry') : t('addNewDebtEntry')}
               />
             </div>
-          </div>
+                {editingEntry ? t('updateDebtEntry') : t('recordWorkerDebt')}
 
           <div className="flex gap-3 pt-4">
             {editingEntry && (
@@ -341,9 +345,9 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                   darkMode 
                     ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                }`}
+                {t('cancel')} {t('edit')}
               >
-                Cancel
+                {t('cancel')}
               </button>
             )}
             <button
@@ -356,7 +360,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
               ) : (
                 <Plus size={16} className="mr-2" />
               )}
-              {editingEntry ? 'Update Entry' : 'Add Entry'}
+              {editingEntry ? t('updateDebtEntry') : t('addEntry')}
             </button>
           </div>
         </form>
@@ -384,7 +388,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                     {t('monthYear')}
                   </th>
                   <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                    {t('workers')}
+                    {t('workerName')}
                   </th>
                   <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
                     {t('category')}
@@ -419,14 +423,14 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                         <button
                           onClick={() => handleEdit(entry)}
                           className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-600 text-blue-400' : 'hover:bg-gray-100 text-blue-600'}`}
-                          title="Edit debt entry"
+                          title={t('editDebtEntry')}
                         >
                           <Edit size={16} />
                         </button>
                         <button
                           onClick={() => handleDelete(entry.id)}
                           className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-600 text-red-400' : 'hover:bg-gray-100 text-red-600'}`}
-                          title="Delete debt entry"
+                          title={t('delete') + ' ' + t('debtEntry')}
                         >
                           <Trash2 size={16} />
                         </button>

@@ -46,7 +46,8 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
   useEffect(() => {
     fetchRecentEntries();
     // Set default month to current month
-    const currentMonth = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    const currentDate = new Date();
+    const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
     setFormData(prev => ({ ...prev, month: currentMonth }));
 
     // Set default UOM to the first available option if uomOptions exist
@@ -77,7 +78,7 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
     // Generate last 12 months and next 6 months
     for (let i = -12; i <= 6; i++) {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, 1);
-      const monthString = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      const monthString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
       months.push(monthString);
     }
     
@@ -114,7 +115,8 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
   };
 
   const resetForm = () => {
-    const currentMonth = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    const currentDate = new Date();
+    const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
     setFormData({
       month: currentMonth,
       name: '',
@@ -149,8 +151,13 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
         throw new Error('Selected worker not found');
       }
 
+      // Convert month format for storage (YYYY-MM to "Month YYYY")
+      const [year, month] = formData.month.split('-');
+      const monthDate = new Date(parseInt(year), parseInt(month) - 1, 1);
+      const formattedMonth = monthDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
       const accountingEntry = {
-        month: formData.month,
+        month: formattedMonth,
         eid: worker.EID,
         name: formData.name,
         work: formData.work,
@@ -191,8 +198,12 @@ const AccountingDataEntry: React.FC<AccountingDataEntryProps> = ({
   };
 
   const handleEdit = (entry: AccountingData) => {
+    // Convert stored month format back to YYYY-MM for the input
+    const monthDate = new Date(entry.month + ' 01');
+    const monthValue = `${monthDate.getFullYear()}-${String(monthDate.getMonth() + 1).padStart(2, '0')}`;
+    
     setFormData({
-      month: entry.month,
+      month: monthValue,
       name: entry.name,
       work: entry.work,
       block: entry.block,

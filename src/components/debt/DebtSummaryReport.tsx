@@ -581,10 +581,10 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
             </div>
             <div className="text-right">
               <p className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                {t('netAmount')}: ${totalNetAmount.toFixed(2)}
+                {t('debtSummaryReport')}
               </p>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                {t('earnings')}: ${totalEarnings.toFixed(2)} - {t('totalDebt')}: ${totalDebt.toFixed(2)}
+                {t('workerEarningsVsDebt')}
               </p>
             </div>
           </div>
