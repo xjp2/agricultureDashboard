@@ -13,18 +13,6 @@ interface DebtSummaryReportProps {
   darkMode: boolean;
 }
 
-interface ConsolidatedWorkerSummary {
-  worker_name: string;
-  eid: string;
-  totalEarnings: number;
-  totalDebt: number;
-  netAmount: number;
-  debtsByCategory: { [category: string]: number };
-  earningsEntries: number;
-  debtEntries: number;
-  months: string[];
-}
-
 const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
   debtData,
   accountingData,
@@ -46,18 +34,21 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
   const [selectedWorker, setSelectedWorker] = useState<WorkerDebtSummary | null>(null);
   const [showPayslipModal, setShowPayslipModal] = useState(false);
 
-  // Generate month options for filters (last 24 months and next 12 months)
+  // Generate unlimited month/year options
   const generateMonthOptions = () => {
     const months = [];
     const currentDate = new Date();
     
-    for (let i = -24; i <= 12; i++) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, 1);
-      const monthString = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-      months.push(monthString);
+    // Generate from 5 years ago to 2 years in the future
+    for (let year = currentDate.getFullYear() - 5; year <= currentDate.getFullYear() + 2; year++) {
+      for (let month = 0; month < 12; month++) {
+        const date = new Date(year, month, 1);
+        const monthString = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        months.push(monthString);
+      }
     }
     
-    return months.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+    return months.sort((a, b) => new Date(b).getTime() - new Date(a).getTime()); // Most recent first
   };
 
   // Helper function to compare month strings
@@ -73,8 +64,8 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
     return Array.from(categories).sort();
   }, [debtData]);
 
-  // Process consolidated worker summaries
-  const consolidatedWorkerSummaries = useMemo(() => {
+  // Process monthly worker summaries (group by worker AND month)
+  const monthlyWorkerSummaries = useMemo(() => {
     let filteredDebtData = [...debtData];
     let filteredAccountingData = [...accountingData];
 
@@ -101,29 +92,30 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
       filteredDebtData = filteredDebtData.filter(entry => entry.category === filterConfig.category);
     }
 
-    // Group by worker (consolidate all months for each worker)
-    const workerMap = new Map<string, ConsolidatedWorkerSummary>();
+    // Group by worker AND month (key: "EID-Month")
+    const workerMonthMap = new Map<string, WorkerDebtSummary>();
 
     // Process debt data
     filteredDebtData.forEach(debt => {
       const worker = workers.find(w => w.Name === debt.worker_name);
-      const key = worker?.EID || debt.worker_name; // Use EID as primary key, fallback to name
+      const eid = worker?.EID || debt.worker_name;
+      const key = `${eid}-${debt.month_year}`;
       
-      if (!workerMap.has(key)) {
-        workerMap.set(key, {
+      if (!workerMonthMap.has(key)) {
+        workerMonthMap.set(key, {
           worker_name: debt.worker_name,
-          eid: worker?.EID || 'N/A',
+          eid: eid,
+          month_year: debt.month_year,
           totalEarnings: 0,
           totalDebt: 0,
           netAmount: 0,
           debtsByCategory: {},
           earningsEntries: 0,
-          debtEntries: 0,
-          months: []
+          debtEntries: 0
         });
       }
 
-      const summary = workerMap.get(key)!;
+      const summary = workerMonthMap.get(key)!;
       summary.totalDebt += debt.amount;
       summary.debtEntries += 1;
       
@@ -131,47 +123,37 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
         summary.debtsByCategory[debt.category] = 0;
       }
       summary.debtsByCategory[debt.category] += debt.amount;
-      
-      // Add month to the list if not already present
-      if (!summary.months.includes(debt.month_year)) {
-        summary.months.push(debt.month_year);
-      }
     });
 
     // Process accounting data
     filteredAccountingData.forEach(earning => {
       const worker = workers.find(w => w.Name === earning.name);
-      const key = worker?.EID || earning.name; // Use EID as primary key, fallback to name
+      const eid = worker?.EID || earning.eid;
+      const key = `${eid}-${earning.month}`;
       
-      if (!workerMap.has(key)) {
-        workerMap.set(key, {
+      if (!workerMonthMap.has(key)) {
+        workerMonthMap.set(key, {
           worker_name: earning.name,
-          eid: worker?.EID || 'N/A',
+          eid: eid,
+          month_year: earning.month,
           totalEarnings: 0,
           totalDebt: 0,
           netAmount: 0,
           debtsByCategory: {},
           earningsEntries: 0,
-          debtEntries: 0,
-          months: []
+          debtEntries: 0
         });
       }
 
-      const summary = workerMap.get(key)!;
+      const summary = workerMonthMap.get(key)!;
       summary.totalEarnings += earning.total;
       summary.earningsEntries += 1;
-      
-      // Add month to the list if not already present
-      if (!summary.months.includes(earning.month)) {
-        summary.months.push(earning.month);
-      }
     });
 
     // Calculate net amounts and apply search filter
-    let summaries = Array.from(workerMap.values()).map(summary => ({
+    let summaries = Array.from(workerMonthMap.values()).map(summary => ({
       ...summary,
-      netAmount: summary.totalEarnings - summary.totalDebt,
-      months: summary.months.sort((a, b) => compareMonths(b, a)) // Sort months newest first
+      netAmount: summary.totalEarnings - summary.totalDebt
     }));
 
     // Apply search filter
@@ -185,8 +167,15 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
 
     // Apply sorting
     summaries.sort((a, b) => {
-      const aValue = a[sortConfig.key as keyof ConsolidatedWorkerSummary];
-      const bValue = b[sortConfig.key as keyof ConsolidatedWorkerSummary];
+      let aValue: any, bValue: any;
+
+      if (sortConfig.key === 'month_year') {
+        aValue = new Date(a.month_year).getTime();
+        bValue = new Date(b.month_year).getTime();
+      } else {
+        aValue = a[sortConfig.key as keyof WorkerDebtSummary];
+        bValue = b[sortConfig.key as keyof WorkerDebtSummary];
+      }
 
       if (typeof aValue === 'string' && typeof bValue === 'string') {
         return sortConfig.direction === 'asc' 
@@ -218,37 +207,23 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
       : <ArrowDown size={16} className="text-blue-500" />;
   };
 
-  const handleWorkerClick = (worker: ConsolidatedWorkerSummary) => {
-    // Convert to the format expected by WorkerPayslipModal
-    // Use the most recent month for the payslip
-    const mostRecentMonth = worker.months[0] || new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-    
-    const payslipWorker: WorkerDebtSummary = {
-      worker_name: worker.worker_name,
-      eid: worker.eid,
-      month_year: mostRecentMonth,
-      totalEarnings: worker.totalEarnings,
-      totalDebt: worker.totalDebt,
-      netAmount: worker.netAmount,
-      debtsByCategory: worker.debtsByCategory,
-      earningsEntries: worker.earningsEntries,
-      debtEntries: worker.debtEntries
-    };
-    
-    setSelectedWorker(payslipWorker);
+  const handleWorkerClick = (worker: WorkerDebtSummary) => {
+    setSelectedWorker(worker);
     setShowPayslipModal(true);
   };
 
   const handleExport = () => {
     const csvContent = [
-      ['Worker Name', 'EID', 'Total Earnings', 'Total Debt', 'Net Amount', 'Months Active', ...allCategories],
-      ...consolidatedWorkerSummaries.map(worker => [
+      ['Worker Name', 'EID', 'Month/Year', 'Total Earnings', 'Total Debt', 'Net Amount', 'Earnings Entries', 'Debt Entries', ...allCategories],
+      ...monthlyWorkerSummaries.map(worker => [
         worker.worker_name,
         worker.eid,
+        worker.month_year,
         worker.totalEarnings.toFixed(2),
         worker.totalDebt.toFixed(2),
         worker.netAmount.toFixed(2),
-        worker.months.join('; '),
+        worker.earningsEntries.toString(),
+        worker.debtEntries.toString(),
         ...allCategories.map(category => (worker.debtsByCategory[category] || 0).toFixed(2))
       ])
     ].map(row => row.join(',')).join('\n');
@@ -257,72 +232,15 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'consolidated_debt_summary_report.csv';
+    a.download = 'monthly_debt_summary_report.csv';
     a.click();
     window.URL.revokeObjectURL(url);
   };
 
-  const handlePrintAllPayslips = () => {
-    // Create a comprehensive payslip for all workers
-    const printContent = consolidatedWorkerSummaries.map(worker => {
-      return `
-        <div style="page-break-after: always; padding: 20px; font-family: Arial, sans-serif;">
-          <h2 style="text-align: center; margin-bottom: 20px;">CONSOLIDATED PAYSLIP</h2>
-          <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
-            <h3>Worker Information</h3>
-            <p><strong>Name:</strong> ${worker.worker_name}</p>
-            <p><strong>Employee ID:</strong> ${worker.eid}</p>
-            <p><strong>Period:</strong> ${worker.months.join(', ')}</p>
-          </div>
-          
-          <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
-            <h3>Earnings</h3>
-            <p><strong>Total Earnings:</strong> $${worker.totalEarnings.toFixed(2)}</p>
-            <p><strong>Number of Entries:</strong> ${worker.earningsEntries}</p>
-          </div>
-          
-          <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
-            <h3>Deductions</h3>
-            ${Object.entries(worker.debtsByCategory).map(([category, amount]) => 
-              `<p><strong>${category}:</strong> $${amount.toFixed(2)}</p>`
-            ).join('')}
-            <hr style="margin: 10px 0;">
-            <p><strong>Total Deductions:</strong> $${worker.totalDebt.toFixed(2)}</p>
-          </div>
-          
-          <div style="border: 2px solid #000; padding: 15px; background-color: #f9f9f9;">
-            <h3>Net Amount</h3>
-            <p style="font-size: 18px;"><strong>Net Pay:</strong> $${worker.netAmount.toFixed(2)}</p>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>All Worker Consolidated Payslips</title>
-            <style>
-              body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-              @media print { body { margin: 0; padding: 0; } }
-            </style>
-          </head>
-          <body>
-            ${printContent}
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
-    }
-  };
-
   // Calculate totals based on filtered data
-  const totalEarnings = consolidatedWorkerSummaries.reduce((sum, worker) => sum + worker.totalEarnings, 0);
-  const totalDebt = consolidatedWorkerSummaries.reduce((sum, worker) => sum + worker.totalDebt, 0);
-  const totalNetAmount = consolidatedWorkerSummaries.reduce((sum, worker) => sum + worker.netAmount, 0);
+  const totalEarnings = monthlyWorkerSummaries.reduce((sum, worker) => sum + worker.totalEarnings, 0);
+  const totalDebt = monthlyWorkerSummaries.reduce((sum, worker) => sum + worker.totalDebt, 0);
+  const totalNetAmount = monthlyWorkerSummaries.reduce((sum, worker) => sum + worker.netAmount, 0);
 
   return (
     <div className="space-y-6">
@@ -335,7 +253,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
               {t('debtSummaryReport')}
             </h3>
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              {t('workerEarningsVsDebt')}
+              {t('monthlyWorkerEarningsVsDebt')}
             </p>
           </div>
         </div>
@@ -348,15 +266,6 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
           >
             <Filter size={16} className="mr-1" />
             {t('filters')}
-          </button>
-          <button
-            onClick={handlePrintAllPayslips}
-            className={`flex items-center px-3 py-2 rounded-md text-sm ${
-              darkMode ? 'bg-blue-900/20 text-blue-400 hover:bg-blue-900/30' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
-            }`}
-          >
-            <FileText size={16} className="mr-1" />
-            {t('printAllPayslips')}
           </button>
           <button
             onClick={handleExport}
@@ -403,7 +312,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-red-500`}
               >
-                <option value="">{t('allMonthsFrom')}</option>
+                <option value="">{t('selectStartMonth')}</option>
                 {generateMonthOptions().map(month => (
                   <option key={month} value={month}>{month}</option>
                 ))}
@@ -422,7 +331,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
                     : 'bg-white border-gray-300 text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-red-500`}
               >
-                <option value="">{t('allMonthsTo')}</option>
+                <option value="">{t('selectEndMonth')}</option>
                 {generateMonthOptions().map(month => (
                   <option key={month} value={month}>{month}</option>
                 ))}
@@ -448,17 +357,48 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
               </select>
             </div>
           </div>
+          
+          {/* Active Filters Display */}
+          {(filterConfig.monthFrom || filterConfig.monthTo || filterConfig.category || filterConfig.search) && (
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <p className={`text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                {t('activeFilters')}:
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {filterConfig.monthFrom && (
+                  <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-100 text-blue-800'}`}>
+                    {t('from')}: {filterConfig.monthFrom}
+                  </span>
+                )}
+                {filterConfig.monthTo && (
+                  <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-100 text-blue-800'}`}>
+                    {t('to')}: {filterConfig.monthTo}
+                  </span>
+                )}
+                {filterConfig.category && (
+                  <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-purple-900/20 text-purple-400' : 'bg-purple-100 text-purple-800'}`}>
+                    {t('category')}: {filterConfig.category}
+                  </span>
+                )}
+                {filterConfig.search && (
+                  <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-green-900/20 text-green-400' : 'bg-green-100 text-green-800'}`}>
+                    {t('search')}: "{filterConfig.search}"
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Summary Statistics */}
+      {/* Summary Statistics (based on filtered data) */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('totalWorkers')}</p>
+              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{t('monthlyRecords')}</p>
               <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                {consolidatedWorkerSummaries.length}
+                {monthlyWorkerSummaries.length}
               </p>
             </div>
             <Users size={24} className="text-blue-500" />
@@ -503,7 +443,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
         </div>
       </div>
 
-      {/* Consolidated Worker Summary Table */}
+      {/* Monthly Worker Summary Table */}
       <div className={`rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} overflow-hidden`}>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -527,8 +467,14 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
                     {getSortIcon('eid')}
                   </div>
                 </th>
-                <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                  {t('monthYear')}
+                <th
+                  className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600`}
+                  onClick={() => handleSort('month_year')}
+                >
+                  <div className="flex items-center space-x-1">
+                    <span>{t('monthYear')}</span>
+                    {getSortIcon('month_year')}
+                  </div>
                 </th>
                 <th
                   className={`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600`}
@@ -563,7 +509,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
               </tr>
             </thead>
             <tbody className={`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
-              {consolidatedWorkerSummaries.length === 0 ? (
+              {monthlyWorkerSummaries.length === 0 ? (
                 <tr>
                   <td colSpan={7} className={`px-6 py-12 text-center ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                     <div className="flex flex-col items-center">
@@ -574,8 +520,8 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
                   </td>
                 </tr>
               ) : (
-                consolidatedWorkerSummaries.map((worker) => (
-                  <tr key={worker.eid} className={darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                monthlyWorkerSummaries.map((worker) => (
+                  <tr key={`${worker.eid}-${worker.month_year}`} className={darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                       {worker.worker_name}
                     </td>
@@ -584,19 +530,8 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
                         {worker.eid}
                       </span>
                     </td>
-                    <td className={`px-6 py-4 text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                      <div className="max-w-32">
-                        {worker.months.slice(0, 2).map((month, index) => (
-                          <div key={index} className="text-xs">
-                            {month}
-                          </div>
-                        ))}
-                        {worker.months.length > 2 && (
-                          <div className="text-xs text-gray-500">
-                            +{worker.months.length - 2} more
-                          </div>
-                        )}
-                      </div>
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      {worker.month_year}
                     </td>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold text-center ${darkMode ? 'text-green-400' : 'text-green-600'}`}>
                       ${worker.totalEarnings.toFixed(2)}
@@ -639,12 +574,12 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
       </div>
 
       {/* Summary Footer */}
-      {consolidatedWorkerSummaries.length > 0 && (
+      {monthlyWorkerSummaries.length > 0 && (
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <div className="flex justify-between items-center">
             <div>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                {t('showing')} {consolidatedWorkerSummaries.length} {t('workers')}
+                {t('showing')} {monthlyWorkerSummaries.length} {t('monthlyRecords')}
               </p>
               <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                 {filterConfig.monthFrom || filterConfig.monthTo ? 
