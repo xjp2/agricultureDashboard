@@ -411,7 +411,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
                       {entry.worker_name}
                     </td>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                      <span className={\`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-red-900/20 text-red-400' : 'bg-red-100 text-red-800'}`}>
+                      <span className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-red-900/20 text-red-400' : 'bg-red-100 text-red-800'}`}>
                         {entry.category}
                       </span>
                     </td>
