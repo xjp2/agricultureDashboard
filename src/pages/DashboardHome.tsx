@@ -444,7 +444,6 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ darkMode }) => {
             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               {t('addDailyRainfallData')}
             </p>
-          </button>
           
           <button className={`p-4 rounded-xl border text-left transition-all hover:shadow-md ${darkMode ? 'bg-gray-800 border-gray-700 hover:border-purple-500' : 'bg-white border-gray-200 hover:border-purple-400'}`}>
             <div className="flex items-center mb-3">
