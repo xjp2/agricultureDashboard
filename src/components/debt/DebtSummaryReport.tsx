@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Calculator, Download, Search, Filter, ArrowUpDown, ArrowUp, ArrowDown, FileText, Users, TrendingUp } from 'lucide-react';
 import { DebtData, WorkerDebtSummary, SortConfig, FilterConfig } from '../../lib/debtTypes';
 import { WorkerData } from '../../lib/workersTypes';
