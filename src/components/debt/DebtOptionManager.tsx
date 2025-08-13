@@ -269,14 +269,14 @@ const DebtOptionManager: React.FC<DebtOptionManagerProps> = ({
                     <button
                       onClick={() => handleEdit(option)}
                       className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-600 text-blue-400' : 'hover:bg-gray-100 text-blue-600'}`}
-                      title="Edit debt category"
+                      title={t('editDebtCategoryTooltip')}
                     >
                       <Edit size={16} />
                     </button>
                     <button
                       onClick={() => handleDelete(option)}
                       className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-600 text-red-400' : 'hover:bg-gray-100 text-red-600'}`}
-                      title="Delete debt category"
+                      title={t('deleteDebtCategory')}
                     >
                       <Trash2 size={16} />
                     </button>

@@ -212,7 +212,7 @@ function App() {
                currentPage === 'fertilizer' ? t('fertilizer') :
                currentPage === 'workers' ? t('workers') :
                currentPage === 'accounting' ? t('accounting') :
-               currentPage === 'debt' ? 'Debt Management' :
+               currentPage === 'debt' ? t('debtManagement') :
                t('dashboard')}
             </h1>
           </div>

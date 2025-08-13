@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     { id: 'fertilizer', label: t('fertilizer'), icon: <Leaf size={20} /> },
     { id: 'workers', label: t('workers'), icon: <Users size={20} /> },
     { id: 'accounting', label: t('accounting'), icon: <Calculator size={20} /> },
-    { id: 'debt', label: 'Debt', icon: <CreditCard size={20} /> },
+    { id: 'debt', label: t('debt'), icon: <CreditCard size={20} /> },
   ];
 
   return (

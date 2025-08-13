@@ -187,7 +187,7 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
   };
 
   const formatMonthYear = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    return new Date(dateString + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   };
 
   return (
@@ -365,14 +365,14 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
       {/* Recent Entries */}
       <div className={`p-6 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
         <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-          Recent Debt Entries
+          {t('recentDebtEntries')}
         </h3>
         
         {recentEntries.length === 0 ? (
           <div className="text-center py-8">
             <Calculator size={48} className="mx-auto mb-4 text-gray-400" />
             <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-              No debt entries found. Add your first debt entry above.
+              {t('noDebtEntriesFound')}
             </p>
           </div>
         ) : (
@@ -381,19 +381,19 @@ const DebtDataEntry: React.FC<DebtDataEntryProps> = ({
               <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-50'}>
                 <tr>
                   <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                    Month/Year
+                    {t('monthYear')}
                   </th>
                   <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                    Worker
+                    {t('workers')}
                   </th>
                   <th className={`px-6 py-3 text-left text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                    Category
+                    {t('category')}
                   </th>
                   <th className={`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                    Amount
+                    {t('amount')}
                   </th>
                   <th className={`px-6 py-3 text-center text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-500'} uppercase tracking-wider`}>
-                    Actions
+                    {t('actions')}
                   </th>
                 </tr>
               </thead>

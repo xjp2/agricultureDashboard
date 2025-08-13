@@ -162,22 +162,22 @@ const DebtManagement: React.FC<DebtManagementProps> = ({ darkMode }) => {
   const getViewTitle = () => {
     switch (currentView) {
       case 'entry':
-        return 'Debt Entry';
+        return t('debtEntry');
       case 'summary':
-        return 'Debt Summary & Payslips';
+        return t('debtSummary');
       default:
-        return 'Debt Management';
+        return t('debtManagement');
     }
   };
 
   const getViewDescription = () => {
     switch (currentView) {
       case 'entry':
-        return 'Record worker debt and deductions';
+        return t('recordWorkerDebt');
       case 'summary':
-        return 'View worker debt summaries and generate payslips';
+        return t('viewWorkerDebtSummaries');
       default:
-        return 'Comprehensive debt management system';
+        return t('recordWorkerDebt');
     }
   };
 
@@ -186,7 +186,7 @@ const DebtManagement: React.FC<DebtManagementProps> = ({ darkMode }) => {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500 mx-auto mb-4"></div>
-          <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>Loading debt management system...</p>
+          <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>{t('loadingData')}</p>
         </div>
       </div>
     );
@@ -196,12 +196,12 @@ const DebtManagement: React.FC<DebtManagementProps> = ({ darkMode }) => {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <p className="text-red-500 mb-4">Error: {error}</p>
+          <p className="text-red-500 mb-4">{t('error')}: {error}</p>
           <button 
             onClick={fetchInitialData}
             className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
           >
-            Retry
+            {t('retry')}
           </button>
         </div>
       </div>
@@ -249,7 +249,7 @@ const DebtManagement: React.FC<DebtManagementProps> = ({ darkMode }) => {
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatCard
-          title="Total Debt"
+          title={t('totalDebt')}
           value={`$${totalDebt.toFixed(2)}`}
           icon={<Calculator size={20} />}
           trend={0}
@@ -257,7 +257,7 @@ const DebtManagement: React.FC<DebtManagementProps> = ({ darkMode }) => {
           darkMode={darkMode}
         />
         <StatCard
-          title="Workers with Debt"
+          title={t('workersWithDebt')}
           value={uniqueWorkers.toString()}
           icon={<Users size={20} />}
           trend={0}
@@ -265,7 +265,7 @@ const DebtManagement: React.FC<DebtManagementProps> = ({ darkMode }) => {
           darkMode={darkMode}
         />
         <StatCard
-          title="This Month"
+          title={t('thisMonth')}
           value={`$${currentMonthDebt.toFixed(2)}`}
           icon={<DollarSign size={20} />}
           trend={0}
@@ -273,7 +273,7 @@ const DebtManagement: React.FC<DebtManagementProps> = ({ darkMode }) => {
           darkMode={darkMode}
         />
         <StatCard
-          title="Total Records"
+          title={t('totalRecords')}
           value={debtData.length.toString()}
           icon={<FileText size={20} />}
           trend={0}
