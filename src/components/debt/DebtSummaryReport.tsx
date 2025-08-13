@@ -430,7 +430,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
             <TrendingUp size={24} className="text-green-500" />
           </div>
         </div>
-        <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                {t('totalDebt')}
           <div className="flex items-center justify-between">
             <div>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Debt</p>
@@ -443,7 +443,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
         </div>
         <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           <div className="flex items-center justify-between">
-            <div>
+                {t('netAmount')}
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Net Amount</p>
               <p className={`text-2xl font-bold ${
                 totalNetAmount >= 0 
@@ -576,7 +576,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
           <div className="flex justify-between items-center">
             <div>
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                {t('showing')} {workerDebtSummaries.length} {t('workers')}
+                {t('totalWorkers')}
               </p>
             </div>
             <div className="text-right">
@@ -593,7 +593,7 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
 
       {/* Worker Payslip Modal */}
       {showPayslipModal && selectedWorker && (
-        <WorkerPayslipModal
+                {t('totalEarnings')}
           isOpen={showPayslipModal}
           onClose={() => {
             setShowPayslipModal(false);
