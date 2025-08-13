@@ -147,6 +147,14 @@ export const translations: Translations = {
     details: 'Details',
     commission: 'Commission',
     
+    // Debt Management
+    debtManagement: 'Debt Management',
+    debtEntry: 'Debt Entry',
+    debtSummary: 'Debt Summary',
+    recordWorkerDebt: 'Record worker debt and deductions',
+    debtCategory: 'Debt Category',
+    selectDebtCategory: 'Select debt category',
+    
     // Field Cards and Components
     viewDetails: 'View Details',
     viewTask: 'View Task',
@@ -597,6 +605,14 @@ export const translations: Translations = {
     departments: 'Jabatan',
     details: 'Butiran',
     commission: 'Komisi',
+    
+    // Debt Management
+    debtManagement: 'Pengurusan Hutang',
+    debtEntry: 'Kemasukan Hutang',
+    debtSummary: 'Ringkasan Hutang',
+    recordWorkerDebt: 'Rekod hutang pekerja dan potongan',
+    debtCategory: 'Kategori Hutang',
+    selectDebtCategory: 'Pilih kategori hutang',
     
     // Field Cards and Components
     viewDetails: 'Lihat Butiran',
@@ -1069,6 +1085,14 @@ export const translations: Translations = {
     departments: '部门',
     details: '详情',
     commission: '佣金',
+    
+    // Debt Management
+    debtManagement: '债务管理',
+    debtEntry: '债务录入',
+    debtSummary: '债务摘要',
+    recordWorkerDebt: '记录工人债务和扣除',
+    debtCategory: '债务类别',
+    selectDebtCategory: '选择债务类别',
     
     // Field Cards and Components
     viewDetails: '查看详情',
