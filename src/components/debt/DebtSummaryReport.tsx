@@ -123,8 +123,9 @@ const DebtSummaryReport: React.FC<DebtSummaryReportProps> = ({
 
     // Process accounting data to get earnings for the same months
     filteredAccountingData.forEach(earning => {
-      // Use the month as stored in accounting data (already in "Month YYYY" format)
-      const earningMonthYear = earning.month;
+      // Convert accounting month to date format
+      const earningDate = new Date(earning.month + ' 01');
+      const earningMonthYear = `${earningDate.getFullYear()}-${String(earningDate.getMonth() + 1).padStart(2, '0')}-01`;
       
       const key = `${earning.name}-${earningMonthYear}`;
       
